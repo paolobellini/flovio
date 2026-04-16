@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Settings\Profile;
 use App\Models\User;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 
 test('profile page is displayed', function () {
@@ -42,6 +46,30 @@ test('email verification status is unchanged when email address is unchanged', f
     $response->assertHasNoErrors();
 
     expect($user->refresh()->email_verified_at)->not->toBeNull();
+});
+
+test('verified user is redirected when resending verification notification', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user);
+
+    Livewire::test(Profile::class)
+        ->call('resendVerificationNotification')
+        ->assertRedirect(route('dashboard', absolute: false));
+});
+
+test('unverified user can resend verification notification', function () {
+    $user = User::factory()->unverified()->create();
+
+    $this->actingAs($user);
+
+    Notification::fake();
+
+    Livewire::test(Profile::class)
+        ->call('resendVerificationNotification')
+        ->assertHasNoErrors();
+
+    Notification::assertSentTo($user, VerifyEmail::class);
 });
 
 test('user can delete their account', function () {

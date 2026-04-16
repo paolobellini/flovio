@@ -14,17 +14,23 @@
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
         "livewire/flux": "^2.13.1",
-        "livewire/livewire": "^4.1"
+        "livewire/livewire": "^4.1",
+        "nunomaduro/essentials": "^1.2"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.7",
+        "driftingly/rector-laravel": "^2.3",
         "fakerphp/faker": "^1.24",
+        "larastan/larastan": "^3.9",
         "laravel/pail": "^1.2.5",
         "laravel/pint": "^1.27",
         "laravel/sail": "^1.53",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.9",
         "pestphp/pest": "^4.6",
-        "pestphp/pest-plugin-laravel": "^4.1"
+        "pestphp/pest-plugin-laravel": "^4.1",
+        "pestphp/pest-plugin-type-coverage": "^4.0",
+        "rector/rector": "^2.4"
     },
     "autoload": {
         "psr-4": {
@@ -50,9 +56,6 @@
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1 --timeout=0\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
-        ],
-        "lint": [
-            "pint --parallel"
         ],
         "lint:check": [
             "pint --parallel --test"
@@ -83,6 +86,28 @@
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
+        ],
+        "lint": "pint --parallel",
+        "type": "pest --type-coverage --min=90 --memory-limit=2G",
+        "coverage": "pest --coverage --min=90",
+        "refactor": "rector",
+        "analyse": "phpstan analyse --memory-limit=2G",
+        "check:lint": "pint --test",
+        "check:refactor": "rector --dry-run",
+        "tests": [
+            "@type",
+            "@coverage"
+        ],
+        "check": [
+            "@check:lint",
+            "@analyse",
+            "@check:refactor"
+        ],
+        "cleanup": [
+            "@lint",
+            "@tests",
+            "@analyse",
+            "@check:refactor"
         ]
     },
     "extra": {
