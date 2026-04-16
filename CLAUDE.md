@@ -1,3 +1,53 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+Flovio is a Laravel 13 + Livewire 4 + Flux UI wine management application (part of the domina-winery project). Italian locale (`it`) with English fallback.
+
+## Commands
+
+All commands run through Sail (`vendor/bin/sail`). Key composer scripts:
+
+```bash
+composer run dev          # Start dev server, queue, pail logs, and Vite concurrently
+composer test             # Config clear + lint check + pest
+composer tests            # Type coverage + code coverage checks
+composer coverage         # Pest with coverage (min 90%)
+composer type             # Type coverage check (min 90%)
+composer lint             # Pint formatter (parallel)
+composer lint:check       # Pint dry-run
+composer analyse          # PHPStan (max level, 2G memory)
+composer refactor         # Rector refactoring
+composer cleanup          # lint + tests + analyse + refactor checks
+composer setup            # Full project setup (install, env, key, migrate, build)
+```
+
+Run a single test: `vendor/bin/sail artisan test --compact --filter=testName`
+
+## Quality Thresholds
+
+- **Code coverage**: minimum 90% (enforced by `composer coverage`)
+- **Type coverage**: minimum 90% (enforced by `composer type`)
+- **PHPStan**: level max with larastan extension
+- **Pint**: laravel preset with strict types, final classes, PHPDoc-only annotations
+- **Rector**: Laravel code quality, collections, type declarations, eloquent, testing sets
+
+## Architecture
+
+**Authentication**: Laravel Fortify (backend) + Livewire components (frontend). Features: login, registration, email verification, password reset, 2FA (TOTP with confirmation). User model implements `MustVerifyEmail` and `TwoFactorAuthenticatable`. Rate limiting: 5/min for login and 2FA.
+
+**Routing**: `routes/web.php` (public + auth-gated dashboard) includes `routes/settings.php` (profile, appearance, security). Security settings require password confirmation when 2FA management is enabled.
+
+**Livewire Components**: `app/Livewire/Settings/` (Profile, Security, Appearance, DeleteUserForm), `app/Livewire/Settings/TwoFactor/` (RecoveryCodes), `app/Livewire/Actions/` (Logout). Shared validation via traits in `app/Concerns/`.
+
+**Database**: PostgreSQL 18 (primary: `pgsql` service, testing: `pgsql_test` service on port 5433→5432). Redis for cache (predis client). Sessions and queue use database driver.
+
+**CI**: GitHub Actions runs linting (PHP 8.4) and tests (PHP 8.3, 8.4, 8.5 matrix). Flux credentials from secrets.
+
+---
+
 <laravel-boost-guidelines>
 === foundation rules ===
 
