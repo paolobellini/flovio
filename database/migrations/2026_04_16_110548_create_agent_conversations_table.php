@@ -1,14 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Ai\Migrations\AiMigration;
 
-return new class extends AiMigration
+return new class() extends AiMigration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('agent_conversations', function (Blueprint $table) {
@@ -39,9 +38,6 @@ return new class extends AiMigration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('agent_conversations');
