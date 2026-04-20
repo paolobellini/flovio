@@ -19,7 +19,7 @@ beforeEach(function () {
 });
 
 test('security settings page can be rendered', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user)
         ->withSession(['auth.password_confirmed_at' => time()])
@@ -30,7 +30,7 @@ test('security settings page can be rendered', function () {
 });
 
 test('security settings page requires password confirmation when enabled', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $response = $this->actingAs($user)
         ->get(route('security.edit'));
@@ -41,7 +41,7 @@ test('security settings page requires password confirmation when enabled', funct
 test('security settings page renders without two factor when feature is disabled', function () {
     config(['fortify.features' => []]);
 
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user)
         ->withSession(['auth.password_confirmed_at' => time()])
@@ -52,7 +52,7 @@ test('security settings page renders without two factor when feature is disabled
 });
 
 test('two factor authentication disabled when confirmation abandoned between requests', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $user->forceFill([
         'two_factor_secret' => encrypt('test-secret'),
@@ -124,7 +124,7 @@ test('password confirmation must match', function () {
 });
 
 test('two factor authentication can be enabled', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user);
 
@@ -139,7 +139,7 @@ test('two factor authentication can be enabled', function () {
 });
 
 test('two factor authentication shows verification step when confirmation is required', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user);
 
@@ -157,7 +157,7 @@ test('two factor authentication closes modal when confirmation is not required',
         'confirmPassword' => true,
     ]);
 
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user);
 
@@ -170,7 +170,7 @@ test('two factor authentication closes modal when confirmation is not required',
 });
 
 test('two factor authentication can be confirmed with valid code', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user);
 
@@ -192,7 +192,7 @@ test('two factor authentication can be confirmed with valid code', function () {
 });
 
 test('two factor authentication cannot be confirmed with invalid code', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user);
 
@@ -207,7 +207,7 @@ test('two factor authentication cannot be confirmed with invalid code', function
 });
 
 test('two factor authentication verification can be reset', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user);
 
@@ -224,7 +224,7 @@ test('two factor authentication verification can be reset', function () {
 });
 
 test('two factor authentication can be disabled', function () {
-    $user = User::factory()->withTwoFactor()->create();
+    $user = User::factory()->onboarded()->withTwoFactor()->create();
 
     $this->actingAs($user);
 
@@ -240,7 +240,7 @@ test('two factor authentication can be disabled', function () {
 });
 
 test('modal can be closed and state is reset', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user);
 
@@ -259,7 +259,7 @@ test('modal can be closed and state is reset', function () {
 });
 
 test('modal config returns correct data when two factor is enabled', function () {
-    $user = User::factory()->withTwoFactor()->create();
+    $user = User::factory()->onboarded()->withTwoFactor()->create();
 
     $this->actingAs($user);
 
@@ -269,7 +269,7 @@ test('modal config returns correct data when two factor is enabled', function ()
 });
 
 test('modal config returns correct data for verification step', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user);
 
@@ -281,7 +281,7 @@ test('modal config returns correct data for verification step', function () {
 });
 
 test('modal config returns correct data for initial setup', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user);
 
@@ -292,7 +292,7 @@ test('modal config returns correct data for initial setup', function () {
 });
 
 test('enabling two factor handles corrupted secret gracefully', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user);
 

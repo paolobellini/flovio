@@ -62,7 +62,7 @@ final class Profile extends Component
         }
 
         if ($user->hasVerifiedEmail()) {
-            $this->redirectIntended(default: route('onboarding', absolute: false));
+            $this->redirectIntended(default: route('dashboard', absolute: false));
 
             return;
         }
