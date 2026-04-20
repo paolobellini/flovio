@@ -25,7 +25,7 @@
         <div class="relative grid h-dvh lg:grid-cols-2">
             {{-- Left panel: Form --}}
             <div class="flex items-center justify-center px-6 py-12 sm:px-8 lg:px-12">
-                <div class="w-full max-w-sm">
+                <div class="w-full max-w-md">
                     {{-- Mobile logo --}}
                     <a href="{{ route('home') }}" class="mb-8 flex flex-col items-center gap-2 lg:hidden" wire:navigate>
                         <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-wine-800 text-white">

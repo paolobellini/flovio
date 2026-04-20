@@ -55,7 +55,7 @@ test('verified user is redirected when resending verification notification', fun
 
     Livewire::test(Profile::class)
         ->call('resendVerificationNotification')
-        ->assertRedirect(route('dashboard', absolute: false));
+        ->assertRedirect(route('onboarding', absolute: false));
 });
 
 test('unverified user can resend verification notification', function () {
