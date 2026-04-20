@@ -39,5 +39,12 @@
     "Continue": "Continua",
     "or you can": "oppure puoi",
     "login using a recovery code": "accedere con un codice di recupero",
-    "login using an authentication code": "accedere con un codice di autenticazione"
+    "login using an authentication code": "accedere con un codice di autenticazione",
+    "Your campaigns, your rules.": "Le tue campagne, le tue regole.",
+    "Self-hosted email marketing with AI-powered design, automation, and real-time analytics — all through the Mailgun API.": "Email marketing self-hosted con design assistito dall'IA, automazione e analisi in tempo reale — il tutto tramite le API di Mailgun.",
+    "AI Design": "Design IA",
+    "Automation": "Automazione",
+    "Tracking": "Tracciamento",
+    "Content Review": "Revisione contenuti",
+    "Mailgun API": "API Mailgun"
 }

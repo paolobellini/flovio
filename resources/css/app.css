@@ -23,9 +23,21 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 
-    --color-accent: #4F46E5;
-    --color-accent-content: #4F46E5;
+    --color-accent: #7B2D42;
+    --color-accent-content: #7B2D42;
     --color-accent-foreground: var(--color-white);
+
+    --color-wine-50: #FDF2F4;
+    --color-wine-100: #FAE2E7;
+    --color-wine-200: #F5C5CF;
+    --color-wine-300: #EE9AAB;
+    --color-wine-400: #E46881;
+    --color-wine-500: #D63D5C;
+    --color-wine-600: #C22849;
+    --color-wine-700: #A31D3D;
+    --color-wine-800: #7B2D42;
+    --color-wine-900: #5C1A2E;
+    --color-wine-950: #3A0A1A;
 }
 
 @layer base {
