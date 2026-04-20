@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Flovio is a Laravel 13 + Livewire 4 + Flux UI wine management application (part of the domina-winery project). Italian locale (`it`) with English fallback.
+Flovio is a self-hosted email marketing platform built for agencies and businesses that need full control over their campaigns. Built with Laravel 13 + Livewire 4 + Flux UI (free edition). Italian locale (`it`) with English fallback.
+
+Key features: design newsletters with AI assistance, schedule and automate sends, track opens and clicks in real time, and review content automatically before delivery — all powered by the Mailgun API.
 
 ## Commands
 
@@ -36,15 +38,73 @@ Run a single test: `vendor/bin/sail artisan test --compact --filter=testName`
 
 ## Architecture
 
-**Authentication**: Laravel Fortify (backend) + Livewire components (frontend). Features: login, registration, email verification, password reset, 2FA (TOTP with confirmation). User model implements `MustVerifyEmail` and `TwoFactorAuthenticatable`. Rate limiting: 5/min for login and 2FA.
+**Authentication**: Laravel Fortify (backend) + Livewire components (frontend). Features: login, registration, email verification, password reset, 2FA (TOTP with confirmation). User model uses `TwoFactorAuthenticatable`. Rate limiting: 5/min for login and 2FA. Custom `LoginResponse` redirects onboarded users to dashboard, non-onboarded to onboarding. Custom `RegisterResponse` always redirects to onboarding.
 
-**Routing**: `routes/web.php` (public + auth-gated dashboard) includes `routes/settings.php` (profile, appearance, security). Security settings require password confirmation when 2FA management is enabled.
+**Onboarding**: Multi-step Livewire wizard (`app/Livewire/Onboarding/Wizard.php`) using the auth split layout. Steps: profile (name, company, timezone) → SMTP/Mailgun settings (API key, domain, sender) → summary. Protected by `RedirectIfOnboarded` middleware. Completion sets `onboarded_at` on user.
 
-**Livewire Components**: `app/Livewire/Settings/` (Profile, Security, Appearance, DeleteUserForm), `app/Livewire/Settings/TwoFactor/` (RecoveryCodes), `app/Livewire/Actions/` (Logout). Shared validation via traits in `app/Concerns/`.
+**Routing**: `routes/web.php` (public + auth-gated dashboard/onboarding) includes `routes/settings.php` (profile, appearance, security). Dashboard and settings routes require `EnsureUserIsOnboarded` middleware. Security settings require password confirmation when 2FA management is enabled.
+
+**Livewire Components**: `app/Livewire/Settings/` (Profile, Security, Appearance, DeleteUserForm), `app/Livewire/Settings/TwoFactor/` (RecoveryCodes), `app/Livewire/Onboarding/` (Wizard), `app/Livewire/Actions/` (Logout). Shared validation via traits in `app/Concerns/`.
+
+**Models**: `User` (name, email, company_name, timezone, onboarded_at) with `SmtpSetting` hasOne relationship. `SmtpSetting` (api_key encrypted, domain, sender_name, sender_email) belongs to User. All model fields must be explicitly cast in `casts()` method. All models must have `@property-read` PHPDoc for relationships.
+
+**Actions**: Business logic in single-purpose action classes under `app/Actions/`. Create with `vendor/bin/sail artisan make:action ActionName`. Actions use `handle()` method. Onboarding actions: `UpdateProfileAction`, `StoreSmtpSettingAction`, `CompleteOnboardingAction`.
+
+**Form Requests**: Validation rules in dedicated FormRequest classes under `app/Http/Requests/`. Used by Livewire via `(new RequestClass())->rules()`. Onboarding requests: `ProfileRequest`, `SmtpSettingRequest`.
 
 **Database**: PostgreSQL 18 (primary: `pgsql` service, testing: `pgsql_test` service on port 5433→5432). Redis for cache (predis client). Sessions and queue use database driver.
 
 **CI**: GitHub Actions runs linting (PHP 8.4) and tests (PHP 8.3, 8.4, 8.5 matrix). Flux credentials from secrets.
+
+## Design System
+
+**Color palette**: Wine-themed colors (`wine-50` through `wine-950`) defined in `resources/css/app.css`. Accent color: `#7B2D42` (wine-800).
+
+**Auth pages**: Split layout (`layouts/auth/split.blade.php`) — form on the left, branded panel on the right with animated gradient blobs, feature pills, and glassmorphism effects. All auth pages (login, register, forgot-password, reset-password, verify-email, two-factor-challenge, onboarding) use this layout with centered title/subtitle.
+
+**App logo**: Paper plane SVG icon (`app-logo-icon.blade.php`), uses `fill="currentColor"` for color inheritance. Brand name: "Flovio".
+
+**Validation errors**: Custom Flux error override (`resources/views/flux/error.blade.php`) — small (`text-xs`), minimal top margin (`mt-1`), no icon, red text.
+
+## Conventions
+
+### Naming
+
+- Action test files: named without "Action" suffix (e.g., `UpdateProfileTest.php` not `UpdateProfileActionTest.php`)
+- Action unit tests go in `tests/Unit/Actions/`
+- Form request unit tests go in `tests/Unit/Http/Requests/`
+- Feature tests for full flows go in `tests/Feature/`
+
+### Testing
+
+- Write tests first (TDD when fixing bugs) — create the failing test, then fix the code
+- Use `assertDatabaseHas` in feature tests to verify persistence
+- Form request tests: one test for valid data, one dataset test for a few representative invalid cases (not exhaustive)
+- Action unit tests: one test per action, named without "Action" suffix
+- Use `User::factory()->onboarded()->create()` for tests that access dashboard/settings
+- Use `__()` helper in test assertions when checking translated text on pages
+- Feature tests should test the full flow end-to-end
+
+### Translations
+
+- All user-facing strings must use `__()` helper
+- Italian translations in `lang/it.json` (JSON for Blade `__()` strings) and `lang/it/*.php` (for framework messages)
+- Add Italian translations immediately when adding new UI text
+
+### Models
+
+- All fields must be explicitly cast in `casts()` including `id`, `created_at`, `updated_at`
+- Add `@property-read` PHPDoc annotations for all relationships
+- Sensitive fields use `encrypted` cast (e.g., `api_key`)
+- Hidden fields use `#[Hidden]` attribute
+
+### Dependency Injection
+
+- Use `#[CurrentUser]` attribute from `Illuminate\Container\Attributes\CurrentUser` to inject authenticated user in Livewire action methods
+
+### Jira
+
+- Project key: `FLV` on `bellini.atlassian.net` (cloud ID: `edb9af39-1c29-4229-b847-5d71ce55e973`)
 
 ---
 
