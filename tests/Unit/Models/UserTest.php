@@ -30,4 +30,3 @@ test('user has smtp setting relationship', function () {
 
     expect($user->smtpSetting)->toBeInstanceOf(SmtpSetting::class);
 });
-

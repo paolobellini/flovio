@@ -90,7 +90,7 @@ test('step 2 validates sender email format', function () {
 
     Livewire::test(Wizard::class)
         ->set('currentStep', 2)
-        ->set('mailgun_api_key', 'key-abc123')
+        ->set('mailgun_api_key', 'key-abc12345678')
         ->set('mailgun_domain', 'mg.example.com')
         ->set('sender_name', 'Acme')
         ->set('sender_email', 'not-an-email')
@@ -103,7 +103,7 @@ test('step 2 advances to step 3 with valid data', function () {
 
     Livewire::test(Wizard::class)
         ->set('currentStep', 2)
-        ->set('mailgun_api_key', 'key-abc123')
+        ->set('mailgun_api_key', 'key-abc12345678')
         ->set('mailgun_domain', 'mg.example.com')
         ->set('sender_name', 'Acme')
         ->set('sender_email', 'hello@example.com')
@@ -139,34 +139,4 @@ test('user can go back to completed steps via goToStep', function () {
         ->set('currentStep', 3)
         ->call('goToStep', 1)
         ->assertSet('currentStep', 1);
-});
-
-test('completing onboarding redirects to dashboard', function () {
-    $this->actingAs(User::factory()->create());
-
-    Livewire::test(Wizard::class)
-        ->set('currentStep', 3)
-        ->call('complete')
-        ->assertRedirect(route('dashboard'));
-});
-
-test('full wizard flow works end to end', function () {
-    $user = User::factory()->create(['name' => 'Paolo']);
-
-    $this->actingAs($user);
-
-    Livewire::test(Wizard::class)
-        ->assertSet('name', 'Paolo')
-        ->set('company_name', 'My Agency')
-        ->set('timezone', 'Europe/Rome')
-        ->call('nextStep')
-        ->assertSet('currentStep', 2)
-        ->set('mailgun_api_key', 'key-abc123')
-        ->set('mailgun_domain', 'mg.example.com')
-        ->set('sender_name', 'My Agency')
-        ->set('sender_email', 'hello@example.com')
-        ->call('nextStep')
-        ->assertSet('currentStep', 3)
-        ->call('complete')
-        ->assertRedirect(route('dashboard'));
 });

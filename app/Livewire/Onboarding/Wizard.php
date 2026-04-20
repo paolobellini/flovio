@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\Onboarding;
 
+use App\Actions\Onboarding\CompleteOnboardingAction;
+use App\Http\Requests\Onboarding\ProfileRequest;
+use App\Http\Requests\Onboarding\SmtpSettingRequest;
+use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -33,8 +38,10 @@ final class Wizard extends Component
 
     public function mount(): void
     {
-        $this->name = Auth::user()?->name ?? '';
-        $this->timezone = config('app.timezone', 'UTC');
+        $this->name = Auth::user()->name ?? '';
+        /** @var string $timezone */
+        $timezone = config('app.timezone', 'UTC');
+        $this->timezone = $timezone;
     }
 
     public function nextStep(): void
@@ -55,25 +62,28 @@ final class Wizard extends Component
         }
     }
 
-    public function complete(): void
-    {
+    public function complete(
+        #[CurrentUser] User $user,
+        CompleteOnboardingAction $action,
+    ): void {
+        $action->handle($user, [
+            'name' => $this->name,
+            'company_name' => $this->company_name,
+            'timezone' => $this->timezone,
+            'mailgun_api_key' => $this->mailgun_api_key,
+            'mailgun_domain' => $this->mailgun_domain,
+            'sender_name' => $this->sender_name,
+            'sender_email' => $this->sender_email,
+        ]);
+
         $this->redirect(route('dashboard'));
     }
 
     private function validateCurrentStep(): void
     {
         match ($this->currentStep) {
-            1 => $this->validate([
-                'name' => ['required', 'string', 'max:255'],
-                'company_name' => ['nullable', 'string', 'max:255'],
-                'timezone' => ['required', 'string', 'timezone:all'],
-            ]),
-            2 => $this->validate([
-                'mailgun_api_key' => ['required', 'string'],
-                'mailgun_domain' => ['required', 'string', 'max:255'],
-                'sender_name' => ['required', 'string', 'max:255'],
-                'sender_email' => ['required', 'email', 'max:255'],
-            ]),
+            1 => $this->validate((new ProfileRequest())->rules()),
+            2 => $this->validate((new SmtpSettingRequest())->rules()),
             default => null,
         };
     }

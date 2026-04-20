@@ -6,7 +6,6 @@ namespace App\Livewire\Settings;
 
 use App\Concerns\ProfileValidationRules;
 use Flux\Flux;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
@@ -78,7 +77,7 @@ final class Profile extends Component
     {
         $user = Auth::user();
 
-        return $user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail();
+        return $user !== null && ! $user->hasVerifiedEmail();
     }
 
     #[Computed]
