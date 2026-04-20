@@ -30,6 +30,7 @@ final class UserFactory extends Factory
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
+            'onboarded_at' => null,
         ];
     }
 
@@ -37,6 +38,13 @@ final class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    public function onboarded(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'onboarded_at' => now(),
         ]);
     }
 

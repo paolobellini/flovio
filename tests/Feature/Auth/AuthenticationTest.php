@@ -21,6 +21,21 @@ test('users can authenticate using the login screen', function () {
 
     $response
         ->assertSessionHasNoErrors()
+        ->assertRedirect(route('onboarding', absolute: false));
+
+    $this->assertAuthenticated();
+});
+
+test('onboarded users are redirected to dashboard after login', function () {
+    $user = User::factory()->create(['onboarded_at' => now()]);
+
+    $response = $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $response
+        ->assertSessionHasNoErrors()
         ->assertRedirect(route('dashboard', absolute: false));
 
     $this->assertAuthenticated();

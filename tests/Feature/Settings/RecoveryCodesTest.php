@@ -12,7 +12,7 @@ beforeEach(function () {
 });
 
 test('recovery codes are loaded for user with two factor enabled', function () {
-    $user = User::factory()->withTwoFactor()->create();
+    $user = User::factory()->onboarded()->withTwoFactor()->create();
 
     $this->actingAs($user);
 
@@ -22,7 +22,7 @@ test('recovery codes are loaded for user with two factor enabled', function () {
 });
 
 test('recovery codes are empty for user without two factor', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user);
 
@@ -32,7 +32,7 @@ test('recovery codes are empty for user without two factor', function () {
 });
 
 test('recovery codes can be regenerated', function () {
-    $user = User::factory()->withTwoFactor()->create();
+    $user = User::factory()->onboarded()->withTwoFactor()->create();
 
     $this->actingAs($user);
 
@@ -49,7 +49,7 @@ test('recovery codes can be regenerated', function () {
 });
 
 test('recovery codes handles corrupted data gracefully', function () {
-    $user = User::factory()->withTwoFactor()->create();
+    $user = User::factory()->onboarded()->withTwoFactor()->create();
 
     $user->forceFill([
         'two_factor_recovery_codes' => 'not-encrypted-data',
