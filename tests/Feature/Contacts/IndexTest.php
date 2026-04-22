@@ -90,3 +90,19 @@ test('stats show correct counts', function () {
         ->subscribed->toBe(3)
         ->unsubscribed->toBe(2);
 });
+
+test('contact can be deleted', function () {
+    $user = User::factory()->onboarded()->create();
+    $contact = Contact::factory()->for($user)->create();
+
+    $this->actingAs($user);
+
+    Livewire::test(Index::class)
+        ->call('confirmDelete', $contact->id)
+        ->assertSet('confirmingDelete.id', $contact->id)
+        ->call('delete')
+        ->assertSet('confirmingDelete', null)
+        ->assertHasNoErrors();
+
+    $this->assertDatabaseMissing('contacts', ['id' => $contact->id]);
+});

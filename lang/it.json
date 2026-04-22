@@ -146,5 +146,8 @@
     "Export": "Esporta",
     "Clear": "Annulla selezione",
     "View": "Visualizza",
-    "No contacts found.": "Nessun contatto trovato."
+    "No contacts found.": "Nessun contatto trovato.",
+    "Contact deleted.": "Contatto eliminato.",
+    "Delete contact": "Elimina contatto",
+    "Are you sure you want to delete this contact? This action cannot be undone.": "Sei sicuro di voler eliminare questo contatto? Questa azione non può essere annullata."
 }

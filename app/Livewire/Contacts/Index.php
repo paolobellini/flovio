@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\Contacts;
 
+use App\Actions\DestroyContactAction;
 use App\Models\Contact;
+use Flux\Flux;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +24,8 @@ final class Index extends Component
 
     public string $status = '';
 
+    public ?Contact $confirmingDelete = null;
+
     public function updatedSearch(): void
     {
         $this->resetPage();
@@ -30,6 +34,27 @@ final class Index extends Component
     public function updatedStatus(): void
     {
         $this->resetPage();
+    }
+
+    public function confirmDelete(Contact $contact): void
+    {
+        $this->confirmingDelete = $contact;
+
+        $this->dispatch('modal-show', name: 'confirm-delete-contact');
+    }
+
+    public function delete(DestroyContactAction $action): void
+    {
+        if ($this->confirmingDelete === null) {
+            return;
+        }
+
+        $action->handle($this->confirmingDelete);
+
+        $this->confirmingDelete = null;
+
+        $this->dispatch('modal-close', name: 'confirm-delete-contact');
+        Flux::toast(variant: 'success', text: __('Contact deleted.'));
     }
 
     /**

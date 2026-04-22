@@ -101,7 +101,7 @@
                                     </button>
                                 </flux:tooltip>
                                 <flux:tooltip content="{{ __('Delete') }}" position="top">
-                                    <button class="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition hover:bg-red-50 hover:text-red-600">
+                                    <button wire:click="confirmDelete({{ $contact->id }})" class="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition hover:bg-red-50 hover:text-red-600">
                                         <flux:icon.trash variant="mini" class="size-4" />
                                     </button>
                                 </flux:tooltip>
@@ -141,6 +141,13 @@
             </div>
         </div>
     @endif
+
+    {{-- Delete confirmation modal --}}
+    <x-confirm-delete
+        name="confirm-delete-contact"
+        :heading="__('Delete contact')"
+        :description="__('Are you sure you want to delete this contact? This action cannot be undone.')"
+    />
 
     {{-- Bulk actions floating bar --}}
     <x-bulk-actions>
