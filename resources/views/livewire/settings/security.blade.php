@@ -1,5 +1,5 @@
 <section class="w-full">
-    @include('partials.settings-heading')
+    @include('partials.settings-heading', ['currentTab' => 'security'])
 
     <flux:heading class="sr-only">{{ __('Security settings') }}</flux:heading>
 
