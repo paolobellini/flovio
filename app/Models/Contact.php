@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\ContactStatus;
+use App\Observers\ContactObserver;
 use Database\Factories\ContactFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @property ?Carbon $updated_at
  * @property-read User $user
  */
+#[ObservedBy(ContactObserver::class)]
 final class Contact extends Model
 {
     /** @use HasFactory<ContactFactory> */
@@ -52,6 +56,26 @@ final class Contact extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @param  Builder<Contact>  $query
+     */
+    protected function scopeSearch(Builder $query, string $term): void
+    {
+        $lower = mb_strtolower($term);
+
+        $query->where(fn (Builder $q) => $q
+            ->whereRaw('LOWER(name) like ?', ["{$lower}%"])
+            ->orWhereRaw('LOWER(email) like ?', ["{$lower}%"]));
+    }
+
+    /**
+     * @param  Builder<Contact>  $query
+     */
+    protected function scopeStatus(Builder $query, string $status): void
+    {
+        $query->where('status', $status);
     }
 
     public function isSubscribed(): bool

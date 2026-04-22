@@ -15,7 +15,7 @@ return new class() extends Migration
             $table->foreignId('user_id')->constrained();
             $table->string('email');
             $table->string('name');
-            $table->string('status')->default('subscribed');
+            $table->string('status')->default('subscribed')->index();
             $table->timestamp('subscribed_at')->nullable();
             $table->timestamp('unsubscribed_at')->nullable();
             $table->timestamps();
