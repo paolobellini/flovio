@@ -168,5 +168,8 @@
     "Update the contact details.": "Aggiorna i dettagli del contatto.",
     "Add a new contact to your list.": "Aggiungi un nuovo contatto alla tua lista.",
     "Contact updated.": "Contatto aggiornato.",
-    "Contact created.": "Contatto creato."
+    "Contact created.": "Contatto creato.",
+    "Delete contacts": "Elimina contatti",
+    "Are you sure you want to delete the selected contacts? This action cannot be undone.": "Sei sicuro di voler eliminare i contatti selezionati? Questa azione non può essere annullata.",
+    ":count contacts deleted.": ":count contatti eliminati."
 }

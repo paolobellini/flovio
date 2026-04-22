@@ -159,3 +159,21 @@ test('contact form validates required fields', function (string $field) {
     'name' => ['name'],
     'email' => ['email'],
 ]);
+
+test('contacts can be bulk deleted', function () {
+    $user = User::factory()->onboarded()->create();
+    $contacts = Contact::factory()->count(3)->create();
+    $kept = Contact::factory()->create();
+
+    $this->actingAs($user);
+
+    Livewire::test(Index::class)
+        ->set('selected', $contacts->pluck('id')->all())
+        ->call('confirmBulkDelete')
+        ->call('bulkDelete')
+        ->assertSet('selected', [])
+        ->assertHasNoErrors();
+
+    expect(Contact::query()->count())->toBe(1)
+        ->and(Contact::query()->first()->id)->toBe($kept->id);
+});

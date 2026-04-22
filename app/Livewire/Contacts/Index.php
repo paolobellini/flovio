@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Contacts;
 
+use App\Actions\BulkDestroyContactsAction;
 use App\Actions\DestroyContactAction;
 use App\Actions\StoreContactAction;
 use App\Actions\UpdateContactAction;
@@ -28,6 +29,9 @@ final class Index extends Component
     public string $status = '';
 
     public ?Contact $confirmingDelete = null;
+
+    /** @var array<int, int> */
+    public array $selected = [];
 
     public ?Contact $editing = null;
 
@@ -83,6 +87,21 @@ final class Index extends Component
         $this->email = '';
 
         $this->dispatch('modal-close', name: 'contact-form');
+    }
+
+    public function confirmBulkDelete(): void
+    {
+        $this->dispatch('modal-show', name: 'confirm-bulk-delete');
+    }
+
+    public function bulkDelete(BulkDestroyContactsAction $action): void
+    {
+        $count = $action->handle($this->selected);
+
+        $this->selected = [];
+
+        $this->dispatch('modal-close', name: 'confirm-bulk-delete');
+        Flux::toast(variant: 'success', text: __(':count contacts deleted.', ['count' => $count]));
     }
 
     public function confirmDelete(Contact $contact): void

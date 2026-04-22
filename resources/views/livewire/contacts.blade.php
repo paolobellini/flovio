@@ -12,6 +12,7 @@
             this.selected.includes(id) ? this.selected = this.selected.filter(i => i !== id) : this.selected.push(id)
         },
     }"
+    x-on:modal-close.window="selected = []"
 >
     {{-- Header --}}
     <div class="flex items-center justify-between">
@@ -177,9 +178,17 @@
         :description="__('Are you sure you want to delete this contact? This action cannot be undone.')"
     />
 
+    {{-- Bulk delete confirmation modal --}}
+    <x-confirm-delete
+        name="confirm-bulk-delete"
+        :heading="__('Delete contacts')"
+        :description="__('Are you sure you want to delete the selected contacts? This action cannot be undone.')"
+        action="bulkDelete"
+    />
+
     {{-- Bulk actions floating bar --}}
     <x-bulk-actions>
-        <flux:button variant="ghost" size="sm" icon="trash">{{ __('Delete') }}</flux:button>
+        <flux:button variant="ghost" size="sm" icon="trash" x-on:click="$wire.set('selected', selected).then(() => $wire.confirmBulkDelete())">{{ __('Delete') }}</flux:button>
         <flux:button variant="ghost" size="sm" icon="arrow-down-tray">{{ __('Export') }}</flux:button>
     </x-bulk-actions>
 </div>
