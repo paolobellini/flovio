@@ -18,7 +18,7 @@ test('contacts page can be rendered', function () {
 
 test('contacts page lists contacts', function () {
     $user = User::factory()->onboarded()->create();
-    $contact = Contact::factory()->for($user)->create(['name' => 'Marco Rossi']);
+    $contact = Contact::factory()->create(['name' => 'Marco Rossi']);
 
     $this->actingAs($user);
 
@@ -28,8 +28,8 @@ test('contacts page lists contacts', function () {
 
 test('contacts can be searched by name', function () {
     $user = User::factory()->onboarded()->create();
-    Contact::factory()->for($user)->create(['name' => 'Marco Rossi']);
-    Contact::factory()->for($user)->create(['name' => 'Laura Bianchi']);
+    Contact::factory()->create(['name' => 'Marco Rossi']);
+    Contact::factory()->create(['name' => 'Laura Bianchi']);
 
     $this->actingAs($user);
 
@@ -41,8 +41,8 @@ test('contacts can be searched by name', function () {
 
 test('contacts can be searched by email', function () {
     $user = User::factory()->onboarded()->create();
-    Contact::factory()->for($user)->create(['name' => 'Marco Rossi', 'email' => 'marco@example.com']);
-    Contact::factory()->for($user)->create(['name' => 'Laura Bianchi', 'email' => 'laura@example.com']);
+    Contact::factory()->create(['name' => 'Marco Rossi', 'email' => 'marco@example.com']);
+    Contact::factory()->create(['name' => 'Laura Bianchi', 'email' => 'laura@example.com']);
 
     $this->actingAs($user);
 
@@ -54,8 +54,8 @@ test('contacts can be searched by email', function () {
 
 test('contacts can be filtered by status', function () {
     $user = User::factory()->onboarded()->create();
-    Contact::factory()->for($user)->create(['name' => 'Marco Rossi']);
-    Contact::factory()->for($user)->unsubscribed()->create(['name' => 'Laura Bianchi']);
+    Contact::factory()->create(['name' => 'Marco Rossi']);
+    Contact::factory()->unsubscribed()->create(['name' => 'Laura Bianchi']);
 
     $this->actingAs($user);
 
@@ -67,7 +67,7 @@ test('contacts can be filtered by status', function () {
 
 test('contacts are paginated', function () {
     $user = User::factory()->onboarded()->create();
-    Contact::factory()->for($user)->count(15)->create();
+    Contact::factory()->count(15)->create();
 
     $this->actingAs($user);
 
@@ -78,8 +78,8 @@ test('contacts are paginated', function () {
 
 test('stats show correct counts', function () {
     $user = User::factory()->onboarded()->create();
-    Contact::factory()->for($user)->count(3)->create();
-    Contact::factory()->for($user)->unsubscribed()->count(2)->create();
+    Contact::factory()->count(3)->create();
+    Contact::factory()->unsubscribed()->count(2)->create();
 
     $this->actingAs($user);
 
@@ -93,7 +93,7 @@ test('stats show correct counts', function () {
 
 test('contact can be deleted', function () {
     $user = User::factory()->onboarded()->create();
-    $contact = Contact::factory()->for($user)->create();
+    $contact = Contact::factory()->create();
 
     $this->actingAs($user);
 

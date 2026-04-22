@@ -6,7 +6,6 @@ namespace Database\Factories;
 
 use App\Enums\ContactStatus;
 use App\Models\Contact;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +19,6 @@ final class ContactFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
             'email' => fake()->unique()->safeEmail(),
             'name' => fake()->name(),
             'status' => ContactStatus::Subscribed,

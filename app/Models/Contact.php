@@ -11,12 +11,10 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
  * @property-read int $id
- * @property int $user_id
  * @property string $email
  * @property string $name
  * @property ContactStatus $status
@@ -24,7 +22,6 @@ use Illuminate\Support\Carbon;
  * @property ?Carbon $unsubscribed_at
  * @property ?Carbon $created_at
  * @property ?Carbon $updated_at
- * @property-read User $user
  */
 #[ObservedBy(ContactObserver::class)]
 final class Contact extends Model
@@ -39,7 +36,6 @@ final class Contact extends Model
     {
         return [
             'id' => 'integer',
-            'user_id' => 'integer',
             'email' => 'string',
             'name' => 'string',
             'status' => ContactStatus::class,
@@ -48,14 +44,6 @@ final class Contact extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
-    }
-
-    /**
-     * @return BelongsTo<User, $this>
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     /**

@@ -12,15 +12,12 @@ return new class() extends Migration
     {
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('name');
             $table->string('status')->default('subscribed')->index();
             $table->timestamp('subscribed_at')->nullable();
             $table->timestamp('unsubscribed_at')->nullable();
             $table->timestamps();
-
-            $table->unique(['user_id', 'email']);
         });
     }
 
