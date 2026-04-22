@@ -149,5 +149,19 @@
     "No contacts found.": "Nessun contatto trovato.",
     "Contact deleted.": "Contatto eliminato.",
     "Delete contact": "Elimina contatto",
-    "Are you sure you want to delete this contact? This action cannot be undone.": "Sei sicuro di voler eliminare questo contatto? Questa azione non può essere annullata."
+    "Are you sure you want to delete this contact? This action cannot be undone.": "Sei sicuro di voler eliminare questo contatto? Questa azione non può essere annullata.",
+    "Added :date": "Aggiunto il :date",
+    "Edit": "Modifica",
+    "Emails sent": "Email inviate",
+    "Opened": "Aperte",
+    "Clicked": "Cliccate",
+    "Open rate": "Tasso di apertura",
+    "Lists": "Liste",
+    "Add": "Aggiungi",
+    "Recent activity": "Attività recente",
+    "sent": "inviata",
+    "opened": "aperta",
+    "clicked": "cliccata",
+    "AI Insight": "Analisi IA",
+    ":name is a highly engaged subscriber with a :rate open rate, well above the :avg average. Most active on product update campaigns — a strong candidate for the VIP list. Last interaction was :days ago.": ":name è un iscritto molto attivo con un tasso di apertura del :rate, ben al di sopra della media del :avg. Più attivo sulle campagne di aggiornamento prodotto — un ottimo candidato per la lista VIP. Ultima interazione :days giorni fa."
 }

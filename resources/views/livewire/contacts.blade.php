@@ -96,9 +96,9 @@
                         <flux:table.cell>
                             <div class="flex items-center gap-1.5 pe-2">
                                 <flux:tooltip content="{{ __('View') }}" position="top">
-                                    <button class="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition hover:bg-zinc-100 hover:text-wine-800">
+                                    <a href="{{ route('contacts.show', $contact) }}" wire:navigate class="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition hover:bg-zinc-100 hover:text-wine-800">
                                         <flux:icon.eye variant="mini" class="size-4" />
-                                    </button>
+                                    </a>
                                 </flux:tooltip>
                                 <flux:tooltip content="{{ __('Delete') }}" position="top">
                                     <button wire:click="confirmDelete({{ $contact->id }})" class="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition hover:bg-red-50 hover:text-red-600">
