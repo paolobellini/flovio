@@ -31,6 +31,15 @@ final class AiSetting extends Model
     use HasFactory;
 
     /**
+     * @var array<string, string>
+     */
+    protected $attributes = [
+        'chat_model' => 'gemini-2.5-flash',
+        'image_model' => 'gemini-2.5-flash-image',
+        'content_model' => 'gemini-2.5-flash',
+    ];
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array
