@@ -122,5 +122,10 @@
     "OpenAI API key": "Chiave API OpenAI",
     "Anthropic API key": "Chiave API Anthropic",
     "Google API key": "Chiave API Google",
-    "AI settings updated.": "Impostazioni IA aggiornate."
+    "AI settings updated.": "Impostazioni IA aggiornate.",
+    "Delete account": "Elimina account",
+    "Delete your account and all of its resources": "Elimina il tuo account e tutte le sue risorse",
+    "Are you sure you want to delete your account?": "Sei sicuro di voler eliminare il tuo account?",
+    "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.": "Una volta eliminato il tuo account, tutte le sue risorse e i suoi dati verranno eliminati permanentemente. Inserisci la tua password per confermare l'eliminazione definitiva del tuo account.",
+    "Cancel": "Annulla"
 }
