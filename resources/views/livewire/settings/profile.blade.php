@@ -1,5 +1,5 @@
 <section class="w-full">
-    @include('partials.settings-heading')
+    @include('partials.settings-heading', ['currentTab' => 'profile'])
 
     <flux:heading class="sr-only">{{ __('Profile settings') }}</flux:heading>
 

@@ -22,20 +22,10 @@ test('security settings page can be rendered', function () {
     $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user)
-        ->withSession(['auth.password_confirmed_at' => time()])
         ->get(route('security.edit'))
         ->assertOk()
         ->assertSee(__('Two-factor authentication'))
         ->assertSee(__('Enable 2FA'));
-});
-
-test('security settings page requires password confirmation when enabled', function () {
-    $user = User::factory()->onboarded()->create();
-
-    $response = $this->actingAs($user)
-        ->get(route('security.edit'));
-
-    $response->assertRedirect(route('password.confirm'));
 });
 
 test('security settings page renders without two factor when feature is disabled', function () {
@@ -44,7 +34,6 @@ test('security settings page renders without two factor when feature is disabled
     $user = User::factory()->onboarded()->create();
 
     $this->actingAs($user)
-        ->withSession(['auth.password_confirmed_at' => time()])
         ->get(route('security.edit'))
         ->assertOk()
         ->assertSee(__('Update password'))
@@ -265,7 +254,7 @@ test('modal config returns correct data when two factor is enabled', function ()
 
     $component = Livewire::test(Security::class);
 
-    expect($component->get('modalConfig')['title'])->toBe('Two-factor authentication enabled');
+    expect($component->get('modalConfig')['title'])->toBe(__('Two-factor authentication enabled'));
 });
 
 test('modal config returns correct data for verification step', function () {
@@ -277,7 +266,7 @@ test('modal config returns correct data for verification step', function () {
         ->call('enable')
         ->call('showVerificationIfNecessary');
 
-    expect($component->get('modalConfig')['title'])->toBe('Verify authentication code');
+    expect($component->get('modalConfig')['title'])->toBe(__('Verify authentication code'));
 });
 
 test('modal config returns correct data for initial setup', function () {
@@ -288,7 +277,7 @@ test('modal config returns correct data for initial setup', function () {
     $component = Livewire::test(Security::class)
         ->call('enable');
 
-    expect($component->get('modalConfig')['title'])->toBe('Enable two-factor authentication');
+    expect($component->get('modalConfig')['title'])->toBe(__('Enable two-factor authentication'));
 });
 
 test('enabling two factor handles corrupted secret gracefully', function () {

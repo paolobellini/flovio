@@ -12,6 +12,7 @@ final readonly class CompleteOnboardingAction
     public function __construct(
         private UpdateProfileAction $updateProfile,
         private StoreSmtpSettingAction $storeSmtpSetting,
+        private StoreAiSettingAction $storeAiSetting,
     ) {}
 
     /**
@@ -22,6 +23,7 @@ final readonly class CompleteOnboardingAction
         DB::transaction(function () use ($user, $data): void {
             $this->updateProfile->handle($user, $data);
             $this->storeSmtpSetting->handle($user, $data);
+            $this->storeAiSetting->handle($user);
 
             $user->update(['onboarded_at' => now()]);
         });

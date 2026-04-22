@@ -26,7 +26,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property ?string $remember_token
  * @property ?Carbon $created_at
  * @property ?Carbon $updated_at
- * @property-read ?SmtpSetting $smtpSetting
+ * @property-read AiSetting $aiSetting
+ * @property-read SmtpSetting $smtpSetting
  */
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 final class User extends Authenticatable
@@ -51,6 +52,14 @@ final class User extends Authenticatable
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    /**
+     * @return HasOne<AiSetting, $this>
+     */
+    public function aiSetting(): HasOne
+    {
+        return $this->hasOne(AiSetting::class);
     }
 
     /**

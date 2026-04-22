@@ -12,7 +12,7 @@ return new class() extends Migration
     {
         Schema::create('smtp_settings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained();
             $table->text('api_key');
             $table->string('domain');
             $table->string('sender_name');

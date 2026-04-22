@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Livewire\Settings\Profile;
+use App\Models\AiSetting;
+use App\Models\SmtpSetting;
 use App\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Notification;
@@ -74,6 +76,8 @@ test('unverified user can resend verification notification', function () {
 
 test('user can delete their account', function () {
     $user = User::factory()->onboarded()->create();
+    SmtpSetting::factory()->for($user)->create();
+    AiSetting::factory()->for($user)->create();
 
     $this->actingAs($user);
 

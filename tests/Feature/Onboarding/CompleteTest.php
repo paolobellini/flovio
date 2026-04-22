@@ -49,4 +49,11 @@ test('full onboarding flow persists data to database', function () {
     ]);
 
     expect($user->smtpSetting->api_key)->toBe('key-abc12345678');
+
+    $this->assertDatabaseHas('ai_settings', [
+        'user_id' => $user->id,
+        'chat_model' => 'gemini-2.5-flash',
+        'image_model' => 'gemini-2.5-flash-image',
+        'content_model' => 'gemini-2.5-flash',
+    ]);
 });
