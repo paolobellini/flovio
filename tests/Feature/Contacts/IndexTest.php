@@ -106,3 +106,56 @@ test('contact can be deleted', function () {
 
     $this->assertDatabaseMissing('contacts', ['id' => $contact->id]);
 });
+
+test('contact can be created', function () {
+    $user = User::factory()->onboarded()->create();
+
+    $this->actingAs($user);
+
+    Livewire::test(Index::class)
+        ->call('create')
+        ->assertSet('editing', null)
+        ->set('name', 'Marco Rossi')
+        ->set('email', 'marco@example.com')
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $this->assertDatabaseHas('contacts', [
+        'name' => 'Marco Rossi',
+        'email' => 'marco@example.com',
+    ]);
+});
+
+test('contact can be edited', function () {
+    $user = User::factory()->onboarded()->create();
+    $contact = Contact::factory()->create(['name' => 'Marco Rossi']);
+
+    $this->actingAs($user);
+
+    Livewire::test(Index::class)
+        ->call('edit', $contact->id)
+        ->assertSet('name', 'Marco Rossi')
+        ->set('name', 'Marco Bianchi')
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $this->assertDatabaseHas('contacts', [
+        'id' => $contact->id,
+        'name' => 'Marco Bianchi',
+    ]);
+});
+
+test('contact form validates required fields', function (string $field) {
+    $user = User::factory()->onboarded()->create();
+
+    $this->actingAs($user);
+
+    Livewire::test(Index::class)
+        ->call('create')
+        ->set($field, '')
+        ->call('save')
+        ->assertHasErrors($field);
+})->with([
+    'name' => ['name'],
+    'email' => ['email'],
+]);

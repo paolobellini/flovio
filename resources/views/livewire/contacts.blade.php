@@ -19,7 +19,7 @@
             <h1 class="text-2xl font-bold tracking-tight text-zinc-900">{{ __('Contacts') }}</h1>
             <p class="mt-1 text-sm text-zinc-500">{{ __('Manage your email recipients and subscriber lists.') }}</p>
         </div>
-        <flux:button variant="primary" icon="plus">{{ __('Add contact') }}</flux:button>
+        <flux:button variant="primary" icon="plus" wire:click="create">{{ __('Add contact') }}</flux:button>
     </div>
 
     {{-- Stats cards --}}
@@ -70,7 +70,7 @@
                 <flux:table.column>{{ __('Email') }}</flux:table.column>
                 <flux:table.column>{{ __('Status') }}</flux:table.column>
                 <flux:table.column>{{ __('Added') }}</flux:table.column>
-                <flux:table.column class="w-24"></flux:table.column>
+                <flux:table.column class="w-32"></flux:table.column>
             </flux:table.columns>
 
             <flux:table.rows>
@@ -99,6 +99,11 @@
                                     <a href="{{ route('contacts.show', $contact) }}" wire:navigate class="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition hover:bg-zinc-100 hover:text-wine-800">
                                         <flux:icon.eye variant="mini" class="size-4" />
                                     </a>
+                                </flux:tooltip>
+                                <flux:tooltip content="{{ __('Edit') }}" position="top">
+                                    <button wire:click="edit({{ $contact->id }})" class="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition hover:bg-zinc-100 hover:text-wine-800">
+                                        <flux:icon.pencil-square variant="mini" class="size-4" />
+                                    </button>
                                 </flux:tooltip>
                                 <flux:tooltip content="{{ __('Delete') }}" position="top">
                                     <button wire:click="confirmDelete({{ $contact->id }})" class="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition hover:bg-red-50 hover:text-red-600">
@@ -141,6 +146,29 @@
             </div>
         </div>
     @endif
+
+    {{-- Contact form modal --}}
+    <flux:modal name="contact-form" class="max-w-md md:min-w-md">
+        <form wire:submit="save" class="space-y-6">
+            <div>
+                <flux:heading size="lg">{{ $editing ? __('Edit contact') : __('Add contact') }}</flux:heading>
+                <flux:subheading>{{ $editing ? __('Update the contact details.') : __('Add a new contact to your list.') }}</flux:subheading>
+            </div>
+
+            <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus />
+
+            <flux:input wire:model="email" :label="__('Email')" type="email" required />
+
+            <div class="flex gap-3 pt-2">
+                <flux:modal.close>
+                    <flux:button variant="filled" class="w-full">{{ __('Cancel') }}</flux:button>
+                </flux:modal.close>
+                <flux:button variant="primary" type="submit" class="w-full">
+                    {{ $editing ? __('Save') : __('Add contact') }}
+                </flux:button>
+            </div>
+        </form>
+    </flux:modal>
 
     {{-- Delete confirmation modal --}}
     <x-confirm-delete

@@ -163,5 +163,10 @@
     "opened": "aperta",
     "clicked": "cliccata",
     "AI Insight": "Analisi IA",
-    ":name is a highly engaged subscriber with a :rate open rate, well above the :avg average. Most active on product update campaigns — a strong candidate for the VIP list. Last interaction was :days ago.": ":name è un iscritto molto attivo con un tasso di apertura del :rate, ben al di sopra della media del :avg. Più attivo sulle campagne di aggiornamento prodotto — un ottimo candidato per la lista VIP. Ultima interazione :days giorni fa."
+    ":name is a highly engaged subscriber with a :rate open rate, well above the :avg average. Most active on product update campaigns — a strong candidate for the VIP list. Last interaction was :days ago.": ":name è un iscritto molto attivo con un tasso di apertura del :rate, ben al di sopra della media del :avg. Più attivo sulle campagne di aggiornamento prodotto — un ottimo candidato per la lista VIP. Ultima interazione :days giorni fa.",
+    "Edit contact": "Modifica contatto",
+    "Update the contact details.": "Aggiorna i dettagli del contatto.",
+    "Add a new contact to your list.": "Aggiungi un nuovo contatto alla tua lista.",
+    "Contact updated.": "Contatto aggiornato.",
+    "Contact created.": "Contatto creato."
 }

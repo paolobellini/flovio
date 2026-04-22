@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Livewire\Contacts;
 
 use App\Actions\DestroyContactAction;
+use App\Actions\StoreContactAction;
+use App\Actions\UpdateContactAction;
+use App\Http\Requests\ContactRequest;
 use App\Models\Contact;
 use Flux\Flux;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -26,6 +29,12 @@ final class Index extends Component
 
     public ?Contact $confirmingDelete = null;
 
+    public ?Contact $editing = null;
+
+    public string $name = '';
+
+    public string $email = '';
+
     public function updatedSearch(): void
     {
         $this->resetPage();
@@ -34,6 +43,46 @@ final class Index extends Component
     public function updatedStatus(): void
     {
         $this->resetPage();
+    }
+
+    public function create(): void
+    {
+        $this->editing = null;
+        $this->name = '';
+        $this->email = '';
+        $this->resetErrorBag();
+
+        $this->dispatch('modal-show', name: 'contact-form');
+    }
+
+    public function edit(Contact $contact): void
+    {
+        $this->editing = $contact;
+        $this->name = $contact->name;
+        $this->email = $contact->email;
+        $this->resetErrorBag();
+
+        $this->dispatch('modal-show', name: 'contact-form');
+    }
+
+    public function save(StoreContactAction $store, UpdateContactAction $update): void
+    {
+        /** @var array<string, mixed> $validated */
+        $validated = $this->validate(new ContactRequest()->rules());
+
+        if ($this->editing) {
+            $update->handle($this->editing, $validated);
+            Flux::toast(variant: 'success', text: __('Contact updated.'));
+        } else {
+            $store->handle($validated);
+            Flux::toast(variant: 'success', text: __('Contact created.'));
+        }
+
+        $this->editing = null;
+        $this->name = '';
+        $this->email = '';
+
+        $this->dispatch('modal-close', name: 'contact-form');
     }
 
     public function confirmDelete(Contact $contact): void
