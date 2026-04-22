@@ -106,5 +106,9 @@
     "Hide recovery codes": "Nascondi codici di recupero",
     "Regenerate codes": "Rigenera codici",
     "Recovery codes": "Codici di recupero",
-    "Each recovery code can be used once to access your account and will be removed after use. If you need more, click Regenerate codes above.": "Ogni codice di recupero può essere usato una sola volta per accedere al tuo account e verrà rimosso dopo l'uso. Se ne servono altri, clicca Rigenera codici qui sopra."
+    "Each recovery code can be used once to access your account and will be removed after use. If you need more, click Regenerate codes above.": "Ogni codice di recupero può essere usato una sola volta per accedere al tuo account e verrà rimosso dopo l'uso. Se ne servono altri, clicca Rigenera codici qui sopra.",
+    "Mailgun settings": "Impostazioni Mailgun",
+    "Manage your Mailgun API settings and sender configuration": "Gestisci le impostazioni API Mailgun e la configurazione del mittente",
+    "Mailgun settings updated.": "Impostazioni Mailgun aggiornate.",
+    "No Mailgun settings configured. Please complete the onboarding process first.": "Nessuna impostazione Mailgun configurata. Completa prima il processo di onboarding."
 }

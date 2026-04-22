@@ -78,8 +78,8 @@
                         wire:navigate
                         @class([
                             'flex h-11 w-11 items-center justify-center rounded-full transition',
-                            'bg-wine-800 text-white shadow-md shadow-wine-900/20' => request()->routeIs('profile.edit', 'security.edit'),
-                            'text-zinc-400 hover:bg-zinc-100 hover:text-wine-800' => !request()->routeIs('profile.edit', 'security.edit'),
+                            'bg-wine-800 text-white shadow-md shadow-wine-900/20' => request()->routeIs('profile.edit', 'mailgun.edit', 'security.edit'),
+                            'text-zinc-400 hover:bg-zinc-100 hover:text-wine-800' => !request()->routeIs('profile.edit', 'mailgun.edit', 'security.edit'),
                         ])
                     >
                         <flux:icon.cog variant="mini" />
