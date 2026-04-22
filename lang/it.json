@@ -171,5 +171,7 @@
     "Contact created.": "Contatto creato.",
     "Delete contacts": "Elimina contatti",
     "Are you sure you want to delete the selected contacts? This action cannot be undone.": "Sei sicuro di voler eliminare i contatti selezionati? Questa azione non può essere annullata.",
-    ":count contacts deleted.": ":count contatti eliminati."
+    ":count contacts deleted.": ":count contatti eliminati.",
+    "Try adjusting your search or filters.": "Prova a modificare la ricerca o i filtri.",
+    "Clear filters": "Cancella filtri"
 }

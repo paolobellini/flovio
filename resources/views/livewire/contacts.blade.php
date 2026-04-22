@@ -1,5 +1,5 @@
 <div
-    class="flex h-full w-full flex-1 flex-col gap-6"
+    class="flex h-full w-full flex-1 flex-col gap-8"
     x-data="{
         selected: [],
         get allSelected() { return this.pageIds.length > 0 && this.selected.length === this.pageIds.length },
@@ -24,19 +24,10 @@
     </div>
 
     {{-- Stats cards --}}
-    <div class="grid gap-4 sm:grid-cols-3">
-        <div class="rounded-xl border border-zinc-200 bg-white p-5">
-            <flux:text variant="subtle" class="text-xs uppercase tracking-wider">{{ __('Total contacts') }}</flux:text>
-            <p class="mt-1 text-2xl font-semibold text-zinc-900">{{ number_format($this->stats['total']) }}</p>
-        </div>
-        <div class="rounded-xl border border-zinc-200 bg-white p-5">
-            <flux:text variant="subtle" class="text-xs uppercase tracking-wider">{{ __('Subscribed') }}</flux:text>
-            <p class="mt-1 text-2xl font-semibold text-zinc-900">{{ number_format($this->stats['subscribed']) }}</p>
-        </div>
-        <div class="rounded-xl border border-zinc-200 bg-white p-5">
-            <flux:text variant="subtle" class="text-xs uppercase tracking-wider">{{ __('Unsubscribed') }}</flux:text>
-            <p class="mt-1 text-2xl font-semibold text-zinc-900">{{ number_format($this->stats['unsubscribed']) }}</p>
-        </div>
+    <div class="grid gap-5 sm:grid-cols-3">
+        <x-stat-card icon="users" :label="__('Total contacts')" :value="number_format($this->stats['total'])" color="wine" />
+        <x-stat-card icon="check-circle" :label="__('Subscribed')" :value="number_format($this->stats['subscribed'])" color="green" />
+        <x-stat-card icon="x-circle" :label="__('Unsubscribed')" :value="number_format($this->stats['unsubscribed'])" />
     </div>
 
     {{-- Toolbar --}}
@@ -59,7 +50,11 @@
     </div>
 
     {{-- Contacts table --}}
-    <div class="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+    <div
+        class="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm transition-opacity duration-200"
+        wire:loading.class="opacity-50"
+        wire:target="search, status, previousPage, nextPage"
+    >
         <flux:table>
             <flux:table.columns>
                 <flux:table.column class="w-16">
@@ -76,14 +71,21 @@
 
             <flux:table.rows>
                 @forelse ($this->contacts as $contact)
-                    <flux:table.row :key="$contact->id" x-bind:class="selected.includes({{ $contact->id }}) && 'bg-zinc-50'" data-contact-id="{{ $contact->id }}">
+                    <flux:table.row :key="$contact->id" x-bind:class="selected.includes({{ $contact->id }}) && 'bg-wine-50/40'" data-contact-id="{{ $contact->id }}" class="group/row transition-colors duration-150 hover:bg-zinc-50/80">
                         <flux:table.cell>
                             <div class="ps-4">
                                 <flux:checkbox x-on:click="toggle({{ $contact->id }})" x-bind:checked="selected.includes({{ $contact->id }})" />
                             </div>
                         </flux:table.cell>
-                        <flux:table.cell variant="strong">{{ $contact->name }}</flux:table.cell>
-                        <flux:table.cell class="whitespace-nowrap">{{ $contact->email }}</flux:table.cell>
+                        <flux:table.cell>
+                            <a href="{{ route('contacts.show', $contact) }}" wire:navigate class="flex items-center gap-3">
+                                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-wine-100 to-wine-200 text-xs font-bold text-wine-700 shadow-sm shadow-wine-200/30 ring-2 ring-white">
+                                    {{ mb_strtoupper(mb_substr($contact->name, 0, 1)) }}
+                                </div>
+                                <span class="font-medium text-zinc-900 transition-colors group-hover/row:text-wine-800">{{ $contact->name }}</span>
+                            </a>
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-nowrap text-zinc-500">{{ $contact->email }}</flux:table.cell>
                         <flux:table.cell>
                             <flux:badge
                                 :color="$contact->status->color()"
@@ -93,9 +95,9 @@
                                 {{ $contact->status->label() }}
                             </flux:badge>
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-nowrap">{{ $contact->created_at->translatedFormat('d M Y') }}</flux:table.cell>
+                        <flux:table.cell class="whitespace-nowrap text-zinc-400 text-sm">{{ $contact->created_at->translatedFormat('d M Y') }}</flux:table.cell>
                         <flux:table.cell>
-                            <div class="flex items-center gap-1.5 pe-2">
+                            <div class="flex items-center gap-1 pe-2">
                                 <flux:tooltip content="{{ __('View') }}" position="top">
                                     <a href="{{ route('contacts.show', $contact) }}" wire:navigate class="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition hover:bg-zinc-100 hover:text-wine-800">
                                         <flux:icon.eye variant="mini" class="size-4" />
@@ -116,8 +118,18 @@
                     </flux:table.row>
                 @empty
                     <flux:table.row>
-                        <flux:table.cell colspan="6" class="text-center">
-                            <flux:text variant="subtle">{{ __('No contacts found.') }}</flux:text>
+                        <flux:table.cell colspan="6">
+                            <x-empty-state
+                                icon="users"
+                                :heading="__('No contacts found.')"
+                                :description="__('Try adjusting your search or filters.')"
+                            >
+                                @if ($search !== '' || $status !== '')
+                                    <flux:button variant="ghost" size="sm" wire:click="$set('search', ''); $set('status', '')">
+                                        {{ __('Clear filters') }}
+                                    </flux:button>
+                                @endif
+                            </x-empty-state>
                         </flux:table.cell>
                     </flux:table.row>
                 @endforelse
