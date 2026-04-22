@@ -110,5 +110,17 @@
     "Mailgun settings": "Impostazioni Mailgun",
     "Manage your Mailgun API settings and sender configuration": "Gestisci le impostazioni API Mailgun e la configurazione del mittente",
     "Mailgun settings updated.": "Impostazioni Mailgun aggiornate.",
-    "No Mailgun settings configured. Please complete the onboarding process first.": "Nessuna impostazione Mailgun configurata. Completa prima il processo di onboarding."
+    "No Mailgun settings configured. Please complete the onboarding process first.": "Nessuna impostazione Mailgun configurata. Completa prima il processo di onboarding.",
+    "AI": "IA",
+    "AI settings": "Impostazioni IA",
+    "Configure AI models and API keys for each feature": "Configura i modelli IA e le chiavi API per ogni funzionalità",
+    "Models": "Modelli",
+    "Chat model": "Modello chat",
+    "Image model": "Modello immagini",
+    "Content model": "Modello contenuti",
+    "API keys": "Chiavi API",
+    "OpenAI API key": "Chiave API OpenAI",
+    "Anthropic API key": "Chiave API Anthropic",
+    "Google API key": "Chiave API Google",
+    "AI settings updated.": "Impostazioni IA aggiornate."
 }

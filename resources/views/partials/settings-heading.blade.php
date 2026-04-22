@@ -6,6 +6,9 @@
         <flux:navbar.item icon="user" :href="route('profile.edit')" :current="$currentTab === 'profile'" wire:navigate>
             {{ __('Profile') }}
         </flux:navbar.item>
+        <flux:navbar.item icon="sparkles" :href="route('ai.edit')" :current="$currentTab === 'ai'" wire:navigate>
+            {{ __('AI') }}
+        </flux:navbar.item>
         <flux:navbar.item icon="envelope" :href="route('mailgun.edit')" :current="$currentTab === 'mailgun'" wire:navigate>
             {{ __('Mailgun') }}
         </flux:navbar.item>

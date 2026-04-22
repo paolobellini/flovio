@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Middleware\EnsureUserIsOnboarded;
+use App\Livewire\Settings\AiSettings;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Mailgun;
 use App\Livewire\Settings\Profile;
@@ -17,6 +18,8 @@ Route::middleware(['auth', EnsureUserIsOnboarded::class])->group(function () {
 
 Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(function () {
     Route::livewire('settings/appearance', Appearance::class)->name('appearance.edit');
+
+    Route::livewire('settings/ai', AiSettings::class)->name('ai.edit');
 
     Route::livewire('settings/mailgun', Mailgun::class)->name('mailgun.edit');
 
