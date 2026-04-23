@@ -9,8 +9,10 @@ use App\Observers\ContactObserver;
 use Database\Factories\ContactFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -22,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property ?Carbon $unsubscribed_at
  * @property ?Carbon $created_at
  * @property ?Carbon $updated_at
+ * @property-read Collection<int, MailingList> $mailingLists
  */
 #[ObservedBy(ContactObserver::class)]
 final class Contact extends Model
@@ -64,6 +67,14 @@ final class Contact extends Model
     protected function scopeStatus(Builder $query, string $status): void
     {
         $query->where('status', $status);
+    }
+
+    /**
+     * @return BelongsToMany<MailingList, $this>
+     */
+    public function mailingLists(): BelongsToMany
+    {
+        return $this->belongsToMany(MailingList::class)->withTimestamps();
     }
 
     public function isSubscribed(): bool
