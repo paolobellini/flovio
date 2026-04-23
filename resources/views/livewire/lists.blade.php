@@ -11,14 +11,9 @@
 @endphp
 
 <div class="flex h-full w-full flex-1 flex-col gap-8">
-    {{-- Header --}}
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-2xl font-bold tracking-tight text-zinc-900">{{ __('Lists') }}</h1>
-            <p class="mt-1 text-sm text-zinc-500">{{ __('Organize your contacts into targeted groups for campaigns.') }}</p>
-        </div>
+    <x-page-header :heading="__('Lists')" :description="__('Organize your contacts into targeted groups for campaigns.')">
         <flux:button variant="primary" icon="plus" wire:click="create">{{ __('Create list') }}</flux:button>
-    </div>
+    </x-page-header>
 
     {{-- Stats cards --}}
     <div class="grid gap-5 sm:grid-cols-3">

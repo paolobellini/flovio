@@ -14,14 +14,9 @@
     }"
     x-on:modal-close.window="selected = []"
 >
-    {{-- Header --}}
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-2xl font-bold tracking-tight text-zinc-900">{{ __('Contacts') }}</h1>
-            <p class="mt-1 text-sm text-zinc-500">{{ __('Manage your email recipients and subscriber lists.') }}</p>
-        </div>
+    <x-page-header :heading="__('Contacts')" :description="__('Manage your email recipients and subscriber lists.')">
         <flux:button variant="primary" icon="plus" wire:click="create">{{ __('Add contact') }}</flux:button>
-    </div>
+    </x-page-header>
 
     {{-- Stats cards --}}
     <div class="grid gap-5 sm:grid-cols-3">
