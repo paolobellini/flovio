@@ -24,23 +24,36 @@
 
     {{-- Lists grid --}}
     <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        @php
+            $colorMap = [
+                'wine' => ['bar' => 'from-wine-400 to-wine-300', 'hover' => 'hover:border-wine-200 hover:shadow-wine-100/20', 'bg' => 'bg-wine-50', 'text' => 'text-wine-600'],
+                'blue' => ['bar' => 'from-blue-400 to-blue-300', 'hover' => 'hover:border-blue-200 hover:shadow-blue-100/20', 'bg' => 'bg-blue-50', 'text' => 'text-blue-600'],
+                'amber' => ['bar' => 'from-amber-400 to-amber-300', 'hover' => 'hover:border-amber-200 hover:shadow-amber-100/20', 'bg' => 'bg-amber-50', 'text' => 'text-amber-600'],
+                'orange' => ['bar' => 'from-orange-400 to-orange-300', 'hover' => 'hover:border-orange-200 hover:shadow-orange-100/20', 'bg' => 'bg-orange-50', 'text' => 'text-orange-600'],
+                'green' => ['bar' => 'from-green-400 to-green-300', 'hover' => 'hover:border-green-200 hover:shadow-green-100/20', 'bg' => 'bg-green-50', 'text' => 'text-green-600'],
+                'purple' => ['bar' => 'from-purple-400 to-purple-300', 'hover' => 'hover:border-purple-200 hover:shadow-purple-100/20', 'bg' => 'bg-purple-50', 'text' => 'text-purple-600'],
+            ];
+        @endphp
+
         @foreach ([
-            ['name' => 'Newsletter', 'description' => 'Iscritti alla newsletter settimanale', 'count' => 1248, 'color' => 'wine', 'icon' => 'envelope', 'updated' => '2h fa'],
-            ['name' => 'Product Updates', 'description' => 'Aggiornamenti su nuovi prodotti e funzionalità', 'count' => 892, 'color' => 'blue', 'icon' => 'megaphone', 'updated' => '1g fa'],
-            ['name' => 'VIP Customers', 'description' => 'Clienti premium con alto tasso di engagement', 'count' => 156, 'color' => 'amber', 'icon' => 'star', 'updated' => '3g fa'],
-            ['name' => 'Re-engagement', 'description' => 'Contatti inattivi da più di 60 giorni', 'count' => 324, 'color' => 'orange', 'icon' => 'arrow-path', 'updated' => '5g fa'],
-            ['name' => 'New Subscribers', 'description' => 'Iscritti negli ultimi 30 giorni', 'count' => 89, 'color' => 'green', 'icon' => 'sparkles', 'updated' => '12h fa'],
-            ['name' => 'Events', 'description' => 'Partecipanti a eventi e degustazioni', 'count' => 773, 'color' => 'purple', 'icon' => 'calendar-days', 'updated' => '2g fa'],
+            ['name' => 'Newsletter', 'description' => 'Iscritti alla newsletter settimanale', 'count' => 1248, 'color' => 'wine', 'icon' => 'envelope', 'updated' => '2h fa', 'id' => 1],
+            ['name' => 'Product Updates', 'description' => 'Aggiornamenti su nuovi prodotti e funzionalità', 'count' => 892, 'color' => 'blue', 'icon' => 'megaphone', 'updated' => '1g fa', 'id' => 2],
+            ['name' => 'VIP Customers', 'description' => 'Clienti premium con alto tasso di engagement', 'count' => 156, 'color' => 'amber', 'icon' => 'star', 'updated' => '3g fa', 'id' => 3],
+            ['name' => 'Re-engagement', 'description' => 'Contatti inattivi da più di 60 giorni', 'count' => 324, 'color' => 'orange', 'icon' => 'arrow-path', 'updated' => '5g fa', 'id' => 4],
+            ['name' => 'New Subscribers', 'description' => 'Iscritti negli ultimi 30 giorni', 'count' => 89, 'color' => 'green', 'icon' => 'sparkles', 'updated' => '12h fa', 'id' => 5],
+            ['name' => 'Events', 'description' => 'Partecipanti a eventi e degustazioni', 'count' => 773, 'color' => 'purple', 'icon' => 'calendar-days', 'updated' => '2g fa', 'id' => 6],
         ] as $list)
-            <a href="#" class="group block rounded-2xl border border-zinc-200/80 bg-white transition-all duration-200 hover:border-{{ $list['color'] }}-200 hover:shadow-lg hover:shadow-{{ $list['color'] }}-100/20">
+            @php $colors = $colorMap[$list['color']]; @endphp
+
+            <a href="{{ route('lists.show', $list['id']) }}" wire:navigate class="group block rounded-2xl border border-zinc-200/80 bg-white transition-all duration-200 {{ $colors['hover'] }} hover:shadow-lg">
                 {{-- Color top bar --}}
-                <div class="h-1.5 rounded-t-2xl bg-gradient-to-r from-{{ $list['color'] }}-400 to-{{ $list['color'] }}-300"></div>
+                <div class="h-1.5 rounded-t-2xl bg-gradient-to-r {{ $colors['bar'] }}"></div>
 
                 <div class="p-5">
                     {{-- Header row --}}
                     <div class="flex items-start gap-3.5">
-                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-{{ $list['color'] }}-50">
-                            <flux:icon :name="$list['icon']" variant="mini" class="size-4.5 text-{{ $list['color'] }}-600" />
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full {{ $colors['bg'] }}">
+                            <flux:icon :name="$list['icon']" variant="mini" class="size-4.5 {{ $colors['text'] }}" />
                         </div>
                         <div class="min-w-0 flex-1">
                             <div class="flex items-center justify-between">
@@ -78,12 +91,4 @@
         @endforeach
     </div>
 
-    {{-- Empty state (hidden, for reference) --}}
-    {{-- <x-empty-state
-        icon="rectangle-stack"
-        :heading="__('No lists yet.')"
-        :description="__('Create your first list to start organizing contacts.')"
-    >
-        <flux:button variant="primary" icon="plus">{{ __('Create list') }}</flux:button>
-    </x-empty-state> --}}
 </div>

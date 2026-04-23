@@ -183,5 +183,22 @@
     "contacts": "contatti",
     "View list": "Visualizza lista",
     "No lists yet.": "Nessuna lista ancora.",
-    "Create your first list to start organizing contacts.": "Crea la tua prima lista per iniziare a organizzare i contatti."
+    "Create your first list to start organizing contacts.": "Crea la tua prima lista per iniziare a organizzare i contatti.",
+    ":count contacts": ":count contatti",
+    "Created :date": "Creata il :date",
+    "Members": "Membri",
+    "Campaigns sent": "Campagne inviate",
+    "Avg. open rate": "Tasso apertura medio",
+    "Avg. click rate": "Tasso clic medio",
+    "Search...": "Cerca...",
+    "Remove": "Rimuovi",
+    "Recent campaigns": "Campagne recenti",
+    "Sent": "Inviata",
+    "Edit list": "Modifica lista",
+    "Update the list details.": "Aggiorna i dettagli della lista.",
+    "Create a new list to organize your contacts.": "Crea una nuova lista per organizzare i tuoi contatti.",
+    "What is this list for?": "A cosa serve questa lista?",
+    "Description": "Descrizione",
+    "List created.": "Lista creata.",
+    "List updated.": "Lista aggiornata."
 }
