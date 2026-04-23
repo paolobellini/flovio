@@ -37,7 +37,7 @@ final class Template extends Model
      */
     protected function scopeSearch(Builder $query, string $term): void
     {
-        $query->where('name', 'like', "{$term}%");
+        $query->whereRaw('LOWER(name) like ?', [mb_strtolower($term).'%']);
     }
 
     /**
