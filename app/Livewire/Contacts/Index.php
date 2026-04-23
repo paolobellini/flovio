@@ -113,10 +113,6 @@ final class Index extends Component
 
     public function delete(DestroyContactAction $action): void
     {
-        if ($this->confirmingDelete === null) {
-            return;
-        }
-
         $action->handle($this->confirmingDelete);
 
         $this->confirmingDelete = null;

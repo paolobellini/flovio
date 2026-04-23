@@ -75,3 +75,17 @@ test('template form validates required fields', function () {
         ->call('save')
         ->assertHasErrors('name');
 });
+
+test('template can be deleted', function () {
+    $user = User::factory()->onboarded()->create();
+    $template = Template::factory()->create();
+
+    $this->actingAs($user);
+
+    Livewire::test(Editor::class, ['template' => $template])
+        ->call('confirmDelete')
+        ->call('delete')
+        ->assertRedirect(route('templates.index'));
+
+    $this->assertDatabaseMissing('templates', ['id' => $template->id]);
+});

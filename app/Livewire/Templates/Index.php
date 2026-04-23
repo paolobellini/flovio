@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\Templates;
 
+use App\Actions\DestroyTemplateAction;
 use App\Models\Template;
+use Flux\Flux;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Computed;
@@ -15,6 +17,25 @@ use Livewire\Component;
 final class Index extends Component
 {
     public string $search = '';
+
+    public ?Template $confirmingDelete = null;
+
+    public function confirmDelete(Template $template): void
+    {
+        $this->confirmingDelete = $template;
+
+        $this->dispatch('modal-show', name: 'confirm-delete-template');
+    }
+
+    public function delete(DestroyTemplateAction $action): void
+    {
+        $action->handle($this->confirmingDelete);
+
+        $this->confirmingDelete = null;
+
+        $this->dispatch('modal-close', name: 'confirm-delete-template');
+        Flux::toast(variant: 'success', text: __('Template deleted.'));
+    }
 
     /**
      * @return Collection<int, Template>

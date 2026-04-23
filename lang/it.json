@@ -292,5 +292,8 @@
     "Create your first template to start designing emails.": "Crea il tuo primo template per iniziare a progettare email.",
     "New template": "Nuovo template",
     "Template updated.": "Template aggiornato.",
-    "Template created.": "Template creato."
+    "Template created.": "Template creato.",
+    "Delete template": "Elimina template",
+    "Are you sure you want to delete this template? This action cannot be undone.": "Sei sicuro di voler eliminare questo template? Questa azione non può essere annullata.",
+    "Template deleted.": "Template eliminato."
 }

@@ -79,10 +79,6 @@ final class Index extends Component
 
     public function delete(DestroyMailingListAction $action): void
     {
-        if ($this->confirmingDelete === null) {
-            return;
-        }
-
         $action->handle($this->confirmingDelete);
 
         $this->confirmingDelete = null;

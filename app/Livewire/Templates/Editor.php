@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Templates;
 
+use App\Actions\DestroyTemplateAction;
 use App\Actions\StoreTemplateAction;
 use App\Actions\UpdateTemplateAction;
 use App\Http\Requests\TemplateRequest;
@@ -47,6 +48,21 @@ final class Editor extends Component
     public function isEditing(): bool
     {
         return $this->template !== null;
+    }
+
+    public function confirmDelete(): void
+    {
+        $this->dispatch('modal-show', name: 'confirm-delete-template');
+    }
+
+    public function delete(DestroyTemplateAction $action): void
+    {
+        $action->handle($this->template);
+
+        $this->dispatch('modal-close', name: 'confirm-delete-template');
+        Flux::toast(variant: 'success', text: __('Template deleted.'));
+
+        $this->redirectRoute('templates.index', navigate: true);
     }
 
     public function save(StoreTemplateAction $store, UpdateTemplateAction $update): void
