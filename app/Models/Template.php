@@ -6,7 +6,10 @@ namespace App\Models;
 
 use App\Enums\TemplateLayout;
 use App\Enums\TemplateTone;
+use App\Observers\TemplateObserver;
 use Database\Factories\TemplateFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -23,10 +26,19 @@ use Illuminate\Support\Carbon;
  * @property ?Carbon $created_at
  * @property ?Carbon $updated_at
  */
+#[ObservedBy(TemplateObserver::class)]
 final class Template extends Model
 {
     /** @use HasFactory<TemplateFactory> */
     use HasFactory;
+
+    /**
+     * @param  Builder<Template>  $query
+     */
+    protected function scopeSearch(Builder $query, string $term): void
+    {
+        $query->where('name', 'like', "{$term}%");
+    }
 
     /**
      * @return array<string, string>

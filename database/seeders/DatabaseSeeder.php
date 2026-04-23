@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Enums\TemplateLayout;
+use App\Enums\TemplateTone;
 use App\Models\AiSetting;
 use App\Models\Contact;
 use App\Models\MailingList;
 use App\Models\SmtpSetting;
+use App\Models\Template;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -80,5 +83,40 @@ final class DatabaseSeeder extends Seeder
         $newsletter->contacts()->attach($allContacts->random(40)->pluck('id'));
         $productUpdates->contacts()->attach($allContacts->random(25)->pluck('id'));
         $vip->contacts()->attach($contacts->random(10)->pluck('id'));
+
+        Template::factory()->create([
+            'name' => 'Newsletter Classica',
+            'description' => 'Template standard per la newsletter settimanale',
+            'layout' => TemplateLayout::Single,
+            'tone' => TemplateTone::Professional,
+        ]);
+
+        Template::factory()->create([
+            'name' => 'Promo Stagionale',
+            'description' => 'Template per offerte e promozioni',
+            'layout' => TemplateLayout::Hero,
+            'tone' => TemplateTone::Casual,
+        ]);
+
+        Template::factory()->create([
+            'name' => 'Welcome Email',
+            'description' => 'Email di benvenuto per nuovi iscritti',
+            'layout' => TemplateLayout::Single,
+            'tone' => TemplateTone::Elegant,
+        ]);
+
+        Template::factory()->create([
+            'name' => 'Evento Degustazione',
+            'description' => 'Invito a eventi e degustazioni',
+            'layout' => TemplateLayout::Hero,
+            'tone' => TemplateTone::Elegant,
+        ]);
+
+        Template::factory()->create([
+            'name' => 'Re-engagement',
+            'description' => 'Riattivazione contatti inattivi',
+            'layout' => TemplateLayout::Single,
+            'tone' => TemplateTone::Casual,
+        ]);
     }
 }
