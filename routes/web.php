@@ -24,7 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('lists/{list}', ListsShow::class)->name('lists.show')->middleware(EnsureUserIsOnboarded::class);
     Route::livewire('templates', TemplatesIndex::class)->name('templates.index')->middleware(EnsureUserIsOnboarded::class);
     Route::livewire('templates/create', TemplatesEditor::class)->name('templates.create')->middleware(EnsureUserIsOnboarded::class);
-    Route::livewire('templates/{id}/edit', TemplatesEditor::class)->name('templates.edit')->middleware(EnsureUserIsOnboarded::class);
+    Route::livewire('templates/{template}/edit', TemplatesEditor::class)->name('templates.edit')->middleware(EnsureUserIsOnboarded::class);
 });
 
 require __DIR__.'/settings.php';

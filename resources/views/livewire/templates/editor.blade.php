@@ -7,8 +7,10 @@
             </flux:button>
             <flux:separator vertical class="h-6" />
             <div>
-                <h1 class="text-lg font-semibold text-zinc-900">Newsletter Classica</h1>
-                <flux:text variant="subtle" class="text-xs">{{ __('Last saved :time ago', ['time' => '2 min']) }}</flux:text>
+                <h1 class="text-lg font-semibold text-zinc-900">{{ $this->isEditing ? $template->name : __('New template') }}</h1>
+                @if ($this->isEditing)
+                    <flux:text variant="subtle" class="text-xs">{{ __('Last saved :time ago', ['time' => $template->updated_at->diffForHumans(short: true)]) }}</flux:text>
+                @endif
             </div>
         </div>
 
@@ -32,7 +34,7 @@
             </div>
 
             <flux:separator vertical class="h-6" />
-            <flux:button variant="primary" icon="check" size="sm">{{ __('Save') }}</flux:button>
+            <flux:button variant="primary" icon="check" size="sm" wire:click="save">{{ __('Save') }}</flux:button>
         </div>
     </div>
 
@@ -68,7 +70,7 @@
                 </div>
 
                 <div class="mt-4 space-y-3">
-                    <flux:textarea :placeholder="__('Describe your template...')" rows="4" class="text-sm" />
+                    <flux:textarea wire:model="prompt" :placeholder="__('Describe your template...')" rows="4" class="text-sm" />
 
                     <div class="flex gap-2">
                         <flux:button variant="primary" icon="sparkles" class="flex-1">{{ __('Generate') }}</flux:button>
@@ -85,16 +87,16 @@
                     <div>
                         <flux:label>{{ __('Primary color') }}</flux:label>
                         <div class="mt-2 flex items-center gap-2">
-                            <div class="h-8 w-8 rounded-lg bg-wine-700 ring-2 ring-wine-700/20"></div>
-                            <flux:input value="#7B2D42" class="flex-1 font-mono text-sm" />
+                            <div class="h-8 w-8 rounded-lg ring-2 ring-zinc-200/50" style="background-color: {{ $primary_color }}"></div>
+                            <flux:input wire:model.blur="primary_color" class="flex-1 font-mono text-sm" />
                         </div>
                     </div>
-                    <flux:select :label="__('Layout')">
+                    <flux:select wire:model="layout" :label="__('Layout')">
                         <flux:select.option value="single">{{ __('Single column') }}</flux:select.option>
                         <flux:select.option value="two-column">{{ __('Two columns') }}</flux:select.option>
                         <flux:select.option value="hero">{{ __('Hero image') }}</flux:select.option>
                     </flux:select>
-                    <flux:select :label="__('Tone')">
+                    <flux:select wire:model="tone" :label="__('Tone')">
                         <flux:select.option value="professional">{{ __('Professional') }}</flux:select.option>
                         <flux:select.option value="casual">{{ __('Casual') }}</flux:select.option>
                         <flux:select.option value="elegant">{{ __('Elegant') }}</flux:select.option>
@@ -106,8 +108,8 @@
             <div class="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-sm">
                 <flux:heading size="sm">{{ __('Template details') }}</flux:heading>
                 <div class="mt-4 space-y-4">
-                    <flux:input :label="__('Name')" value="Newsletter Classica" />
-                    <flux:textarea :label="__('Description')" :placeholder="__('What is this template for?')" rows="2" class="text-sm" />
+                    <flux:input wire:model="name" :label="__('Name')" />
+                    <flux:textarea wire:model="description" :label="__('Description')" :placeholder="__('What is this template for?')" rows="2" class="text-sm" />
                 </div>
             </div>
         </div>
