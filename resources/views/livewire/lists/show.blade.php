@@ -79,53 +79,41 @@
                 <div class="flex items-center justify-between border-b border-zinc-100 px-5 py-4">
                     <flux:heading size="sm">{{ __('Members') }}</flux:heading>
                     <div class="flex items-center gap-2">
-                        <flux:input icon="magnifying-glass" :placeholder="__('Search...')" size="sm" class="w-48" />
-                        <flux:button variant="primary" icon="plus" size="sm">{{ __('Add') }}</flux:button>
+                        <flux:input wire:model.live.debounce.300ms="memberSearch" icon="magnifying-glass" :placeholder="__('Search...')" size="sm" class="w-48" />
+                        <flux:button variant="primary" icon="plus" size="sm" wire:click="openAddMembers">{{ __('Add') }}</flux:button>
                     </div>
                 </div>
 
-                @if ($list->contacts()->count() > 0)
-                    <flux:table>
-                        <flux:table.rows>
-                            @foreach ($list->contacts()->latest('contact_mailing_list.created_at')->limit(5)->get() as $contact)
-                                <flux:table.row class="group/row transition-colors hover:bg-zinc-50/80">
-                                    <flux:table.cell>
-                                        <div class="flex items-center gap-3 ps-2">
-                                            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-wine-100 to-wine-200 text-xs font-bold text-wine-700 ring-2 ring-white">
-                                                {{ mb_strtoupper(mb_substr($contact->name, 0, 1)) }}
-                                            </div>
-                                            <div class="min-w-0">
-                                                <p class="truncate font-medium text-zinc-900">{{ $contact->name }}</p>
-                                                <p class="truncate text-xs text-zinc-400">{{ $contact->email }}</p>
-                                            </div>
-                                        </div>
-                                    </flux:table.cell>
-                                    <flux:table.cell>
-                                        <flux:badge :color="$contact->status->color()" size="sm" inset="top bottom">
-                                            {{ $contact->status->label() }}
-                                        </flux:badge>
-                                    </flux:table.cell>
-                                    <flux:table.cell class="whitespace-nowrap text-sm text-zinc-400">
-                                        {{ $contact->pivot->created_at->translatedFormat('d M Y') }}
-                                    </flux:table.cell>
-                                    <flux:table.cell>
-                                        <div class="flex items-center gap-1 pe-2">
-                                            <flux:tooltip content="{{ __('View') }}" position="top">
-                                                <a href="{{ route('contacts.show', $contact) }}" wire:navigate class="flex h-7 w-7 items-center justify-center rounded-full text-zinc-300 transition hover:bg-zinc-100 hover:text-wine-800">
-                                                    <flux:icon.eye variant="mini" class="size-3.5" />
-                                                </a>
-                                            </flux:tooltip>
-                                            <flux:tooltip content="{{ __('Remove') }}" position="top">
-                                                <button class="flex h-7 w-7 items-center justify-center rounded-full text-zinc-300 transition hover:bg-red-50 hover:text-red-600">
-                                                    <flux:icon.x-mark variant="mini" class="size-3.5" />
-                                                </button>
-                                            </flux:tooltip>
-                                        </div>
-                                    </flux:table.cell>
-                                </flux:table.row>
-                            @endforeach
-                        </flux:table.rows>
-                    </flux:table>
+                @if ($this->members->isNotEmpty())
+                    <div class="divide-y divide-zinc-100">
+                        @foreach ($this->members as $contact)
+                            <div class="flex items-center gap-4 px-5 py-3.5 transition-colors hover:bg-zinc-50/80">
+                                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-wine-100 to-wine-200 text-xs font-bold text-wine-700 ring-2 ring-white">
+                                    {{ mb_strtoupper(mb_substr($contact->name, 0, 1)) }}
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <p class="truncate font-medium text-zinc-900">{{ $contact->name }}</p>
+                                    <p class="truncate text-xs text-zinc-400">{{ $contact->email }}</p>
+                                </div>
+                                <flux:badge :color="$contact->status->color()" size="sm">
+                                    {{ $contact->status->label() }}
+                                </flux:badge>
+                                <span class="hidden whitespace-nowrap text-xs text-zinc-400 sm:block">{{ $contact->pivot->created_at->translatedFormat('d M Y') }}</span>
+                                <div class="flex items-center gap-1">
+                                    <flux:tooltip content="{{ __('View') }}" position="top">
+                                        <a href="{{ route('contacts.show', $contact) }}" wire:navigate class="flex h-7 w-7 items-center justify-center rounded-full text-zinc-300 transition hover:bg-zinc-100 hover:text-wine-800">
+                                            <flux:icon.eye variant="mini" class="size-3.5" />
+                                        </a>
+                                    </flux:tooltip>
+                                    <flux:tooltip content="{{ __('Remove') }}" position="top">
+                                        <button wire:click="removeMember({{ $contact->id }})" class="flex h-7 w-7 items-center justify-center rounded-full text-zinc-300 transition hover:bg-red-50 hover:text-red-600">
+                                            <flux:icon.x-mark variant="mini" class="size-3.5" />
+                                        </button>
+                                    </flux:tooltip>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 @else
                     <x-empty-state
                         icon="users"
@@ -152,6 +140,48 @@
             </div>
         </div>
     </div>
+
+    {{-- Add members modal --}}
+    <flux:modal name="add-members" class="max-w-md md:min-w-md">
+        <div class="space-y-5">
+            <div>
+                <flux:heading size="lg">{{ __('Add members') }}</flux:heading>
+                <flux:subheading>{{ __('Select contacts to add to this list.') }}</flux:subheading>
+            </div>
+
+            <flux:input wire:model.live.debounce.300ms="addSearch" icon="magnifying-glass" :placeholder="__('Search contacts...')" size="sm" />
+
+            <div class="max-h-64 overflow-y-auto divide-y divide-zinc-100 rounded-xl border border-zinc-200">
+                @forelse ($this->availableContacts as $contact)
+                    <label class="flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors hover:bg-zinc-50">
+                        <flux:checkbox wire:model="selectedContacts" value="{{ $contact->id }}" />
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-wine-100 to-wine-200 text-xs font-bold text-wine-700">
+                                {{ mb_strtoupper(mb_substr($contact->name, 0, 1)) }}
+                            </div>
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-medium text-zinc-900">{{ $contact->name }}</p>
+                                <p class="truncate text-xs text-zinc-400">{{ $contact->email }}</p>
+                            </div>
+                        </div>
+                    </label>
+                @empty
+                    <div class="px-4 py-8 text-center">
+                        <flux:text variant="subtle">{{ __('No contacts available.') }}</flux:text>
+                    </div>
+                @endforelse
+            </div>
+
+            <div class="flex gap-3">
+                <flux:modal.close>
+                    <flux:button variant="filled" class="w-full">{{ __('Cancel') }}</flux:button>
+                </flux:modal.close>
+                <flux:button variant="primary" class="w-full" wire:click="addMembers">
+                    {{ __('Add selected') }}
+                </flux:button>
+            </div>
+        </div>
+    </flux:modal>
 
     {{-- Edit list modal --}}
     <x-list-form-modal :editing="true" />

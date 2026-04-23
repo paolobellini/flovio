@@ -224,5 +224,11 @@
     "Campaigns sent to this list will appear here.": "Le campagne inviate a questa lista appariranno qui.",
     "Delete list": "Elimina lista",
     "Are you sure you want to delete this list? All member associations will be removed. This action cannot be undone.": "Sei sicuro di voler eliminare questa lista? Tutte le associazioni ai membri verranno rimosse. Questa azione non può essere annullata.",
-    "List deleted.": "Lista eliminata."
+    "List deleted.": "Lista eliminata.",
+    "Add members": "Aggiungi membri",
+    "Select contacts to add to this list.": "Seleziona i contatti da aggiungere a questa lista.",
+    "No contacts available.": "Nessun contatto disponibile.",
+    "Add selected": "Aggiungi selezionati",
+    "Members added.": "Membri aggiunti.",
+    "Member removed.": "Membro rimosso."
 }

@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Livewire\Lists;
 
+use App\Actions\AddMembersToMailingListAction;
 use App\Actions\DestroyMailingListAction;
+use App\Actions\RemoveMemberFromMailingListAction;
 use App\Actions\UpdateMailingListAction;
 use App\Http\Requests\MailingListRequest;
+use App\Models\Contact;
 use App\Models\MailingList;
 use Flux\Flux;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
@@ -26,6 +30,13 @@ final class Show extends Component
     public string $icon = 'envelope';
 
     public string $color = 'zinc';
+
+    public string $memberSearch = '';
+
+    public string $addSearch = '';
+
+    /** @var array<int, int> */
+    public array $selectedContacts = [];
 
     public function mount(MailingList $list): void
     {
@@ -52,6 +63,58 @@ final class Show extends Component
                 'avg_click_rate' => '-',
             ],
         );
+    }
+
+    /**
+     * @return Collection<int, Contact>
+     */
+    #[Computed]
+    public function members(): Collection
+    {
+        return $this->list->contacts()
+            ->when($this->memberSearch !== '', fn ($q) => $q->search($this->memberSearch))
+            ->latest('contact_mailing_list.created_at')
+            ->limit(5)
+            ->get();
+    }
+
+    /**
+     * @return Collection<int, Contact>
+     */
+    #[Computed]
+    public function availableContacts(): Collection
+    {
+        return Contact::query()
+            ->whereNotIn('id', $this->list->contacts()->pluck('contacts.id'))
+            ->when($this->addSearch !== '', fn ($q) => $q->search($this->addSearch))
+            ->limit(10)
+            ->get();
+    }
+
+    public function openAddMembers(): void
+    {
+        $this->addSearch = '';
+        $this->selectedContacts = [];
+
+        $this->dispatch('modal-show', name: 'add-members');
+    }
+
+    public function addMembers(AddMembersToMailingListAction $action): void
+    {
+        $action->handle($this->list, $this->selectedContacts);
+
+        $this->selectedContacts = [];
+        $this->addSearch = '';
+
+        $this->dispatch('modal-close', name: 'add-members');
+        Flux::toast(variant: 'success', text: __('Members added.'));
+    }
+
+    public function removeMember(Contact $contact, RemoveMemberFromMailingListAction $action): void
+    {
+        $action->handle($this->list, $contact);
+
+        Flux::toast(variant: 'success', text: __('Member removed.'));
     }
 
     public function confirmDelete(): void
