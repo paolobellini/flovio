@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Lists;
 
+use App\Actions\DestroyMailingListAction;
 use App\Actions\StoreMailingListAction;
 use App\Http\Requests\MailingListRequest;
 use App\Models\MailingList;
@@ -19,6 +20,8 @@ use Livewire\Component;
 final class Index extends Component
 {
     public string $search = '';
+
+    public ?MailingList $confirmingDelete = null;
 
     public string $name = '';
 
@@ -65,6 +68,27 @@ final class Index extends Component
             ->withCount('contacts')
             ->latest()
             ->get();
+    }
+
+    public function confirmDelete(MailingList $list): void
+    {
+        $this->confirmingDelete = $list;
+
+        $this->dispatch('modal-show', name: 'confirm-delete-list');
+    }
+
+    public function delete(DestroyMailingListAction $action): void
+    {
+        if ($this->confirmingDelete === null) {
+            return;
+        }
+
+        $action->handle($this->confirmingDelete);
+
+        $this->confirmingDelete = null;
+
+        $this->dispatch('modal-close', name: 'confirm-delete-list');
+        Flux::toast(variant: 'success', text: __('List deleted.'));
     }
 
     public function create(): void

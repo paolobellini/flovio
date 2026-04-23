@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Lists;
 
+use App\Actions\DestroyMailingListAction;
 use App\Actions\UpdateMailingListAction;
 use App\Http\Requests\MailingListRequest;
 use App\Models\MailingList;
@@ -51,6 +52,21 @@ final class Show extends Component
                 'avg_click_rate' => '-',
             ],
         );
+    }
+
+    public function confirmDelete(): void
+    {
+        $this->dispatch('modal-show', name: 'confirm-delete-list');
+    }
+
+    public function delete(DestroyMailingListAction $action): void
+    {
+        $action->handle($this->list);
+
+        $this->dispatch('modal-close', name: 'confirm-delete-list');
+        Flux::toast(variant: 'success', text: __('List deleted.'));
+
+        $this->redirectRoute('lists.index', navigate: true);
     }
 
     public function edit(): void

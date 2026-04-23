@@ -19,7 +19,7 @@
         </flux:button>
 
         <div class="flex items-center gap-2">
-            <flux:button variant="ghost" icon="trash" size="sm" class="text-red-600 hover:text-red-700">{{ __('Delete') }}</flux:button>
+            <flux:button variant="ghost" icon="trash" size="sm" class="text-red-600 hover:text-red-700" wire:click="confirmDelete">{{ __('Delete') }}</flux:button>
         </div>
     </div>
 
@@ -155,4 +155,11 @@
 
     {{-- Edit list modal --}}
     <x-list-form-modal :editing="true" />
+
+    {{-- Delete confirmation modal --}}
+    <x-confirm-delete
+        name="confirm-delete-list"
+        :heading="__('Delete list')"
+        :description="__('Are you sure you want to delete this list? All member associations will be removed. This action cannot be undone.')"
+    />
 </div>

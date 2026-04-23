@@ -35,7 +35,11 @@
             @foreach ($this->lists as $list)
                 @php $colors = $colorMap[$list->color] ?? $colorMap['zinc']; @endphp
 
-                <a href="{{ route('lists.show', $list) }}" wire:navigate class="group block rounded-2xl border border-zinc-200/80 bg-white transition-all duration-200 {{ $colors['hover'] }} hover:shadow-lg">
+                <div
+                    class="group cursor-pointer rounded-2xl border border-zinc-200/80 bg-white transition-all duration-200 {{ $colors['hover'] }} hover:shadow-lg"
+                    x-data
+                    x-on:click="Livewire.navigate('{{ route('lists.show', $list) }}')"
+                >
                     {{-- Color top bar --}}
                     <div class="h-1.5 rounded-t-2xl bg-gradient-to-r {{ $colors['bar'] }}"></div>
 
@@ -55,7 +59,7 @@
                                     </div>
                                     <div class="ms-2 flex shrink-0 items-center gap-1">
                                         <flux:tooltip content="{{ __('Delete') }}" position="top">
-                                            <button class="flex h-7 w-7 items-center justify-center rounded-full text-zinc-300 transition hover:bg-red-50 hover:text-red-600" onclick="event.preventDefault()">
+                                            <button wire:click="confirmDelete({{ $list->id }})" x-on:click.stop class="flex h-7 w-7 items-center justify-center rounded-full text-zinc-300 transition hover:bg-red-50 hover:text-red-600">
                                                 <flux:icon.trash variant="mini" class="size-3.5" />
                                             </button>
                                         </flux:tooltip>
@@ -79,7 +83,7 @@
                             </div>
                         </div>
                     </div>
-                </a>
+                </div>
             @endforeach
         </div>
     @else
@@ -94,4 +98,11 @@
 
     {{-- Create list modal --}}
     <x-list-form-modal />
+
+    {{-- Delete confirmation modal --}}
+    <x-confirm-delete
+        name="confirm-delete-list"
+        :heading="__('Delete list')"
+        :description="__('Are you sure you want to delete this list? All member associations will be removed. This action cannot be undone.')"
+    />
 </div>

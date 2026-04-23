@@ -221,5 +221,8 @@
     "No members yet.": "Nessun membro ancora.",
     "Add contacts to this list to get started.": "Aggiungi contatti a questa lista per iniziare.",
     "No campaigns yet.": "Nessuna campagna ancora.",
-    "Campaigns sent to this list will appear here.": "Le campagne inviate a questa lista appariranno qui."
+    "Campaigns sent to this list will appear here.": "Le campagne inviate a questa lista appariranno qui.",
+    "Delete list": "Elimina lista",
+    "Are you sure you want to delete this list? All member associations will be removed. This action cannot be undone.": "Sei sicuro di voler eliminare questa lista? Tutte le associazioni ai membri verranno rimosse. Questa azione non può essere annullata.",
+    "List deleted.": "Lista eliminata."
 }
