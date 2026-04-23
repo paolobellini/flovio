@@ -4,29 +4,28 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
-use App\Models\Contact;
+use App\Models\MailingList;
 use Illuminate\Support\Facades\Cache;
 
-final class ContactObserver
+final class MailingListObserver
 {
-    public function created(Contact $contact): void
+    public function created(MailingList $mailingList): void
     {
         $this->flush();
     }
 
-    public function updated(Contact $contact): void
+    public function updated(MailingList $mailingList): void
     {
         $this->flush();
     }
 
-    public function deleted(Contact $contact): void
+    public function deleted(MailingList $mailingList): void
     {
         $this->flush();
     }
 
     private function flush(): void
     {
-        Cache::tags(['contacts'])->flush();
         Cache::tags(['mailing_lists'])->flush();
     }
 }

@@ -19,7 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('contacts', ContactsIndex::class)->name('contacts.index')->middleware(EnsureUserIsOnboarded::class);
     Route::livewire('contacts/{contact}', ContactsShow::class)->name('contacts.show')->middleware(EnsureUserIsOnboarded::class);
     Route::livewire('lists', ListsIndex::class)->name('lists.index')->middleware(EnsureUserIsOnboarded::class);
-    Route::livewire('lists/{id}', ListsShow::class)->name('lists.show')->middleware(EnsureUserIsOnboarded::class);
+    Route::livewire('lists/{list}', ListsShow::class)->name('lists.show')->middleware(EnsureUserIsOnboarded::class);
 });
 
 require __DIR__.'/settings.php';

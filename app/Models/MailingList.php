@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Observers\MailingListObserver;
 use Database\Factories\MailingListFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +25,7 @@ use Illuminate\Support\Carbon;
  * @property ?Carbon $updated_at
  * @property-read Collection<int, Contact> $contacts
  */
+#[ObservedBy(MailingListObserver::class)]
 final class MailingList extends Model
 {
     /** @use HasFactory<MailingListFactory> */
@@ -42,6 +46,14 @@ final class MailingList extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    /**
+     * @param  Builder<MailingList>  $query
+     */
+    protected function scopeSearch(Builder $query, string $term): void
+    {
+        $query->where('name', 'like', "{$term}%");
     }
 
     /**
