@@ -47,7 +47,7 @@ final class Index extends Component
                 LEFT JOIN contact_mailing_list cml ON cml.mailing_list_id = ml.id
             ');
 
-            $lastUpdated = MailingList::query()->latest('updated_at')->value('updated_at');
+            $lastUpdated = MailingList::query()->latest('updated_at')->first()?->updated_at;
 
             return [
                 'total' => $row->total,
