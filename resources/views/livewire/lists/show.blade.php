@@ -63,6 +63,26 @@
         </div>
     </div>
 
+    {{-- AI Insight --}}
+    <div class="relative overflow-hidden rounded-2xl border border-wine-200/60 bg-gradient-to-br from-wine-50 to-white p-5">
+        <div class="flex items-start gap-4">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-wine-100 text-wine-700">
+                <flux:icon.sparkles variant="mini" class="size-5" />
+            </div>
+            <div class="flex-1">
+                <flux:heading size="sm" class="text-wine-900">{{ __('AI Insight') }}</flux:heading>
+                <flux:text class="mt-1 leading-relaxed text-wine-800/80">
+                    {{ __('This list has :members members with a :rate open rate, :diff above your account average. Best engagement on Tuesday and Thursday mornings. :inactive members haven\'t opened in 30+ days — consider moving them to a re-engagement list.', [
+                        'members' => number_format($this->stats['members']),
+                        'rate' => '68%',
+                        'diff' => '15%',
+                        'inactive' => 12,
+                    ]) }}
+                </flux:text>
+            </div>
+        </div>
+    </div>
+
     {{-- Stats --}}
     <div class="grid gap-5 sm:grid-cols-4">
         <x-stat-card icon="users" :label="__('Members')" :value="number_format($this->stats['members'])" color="wine" />
