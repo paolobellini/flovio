@@ -231,5 +231,11 @@
     "Add selected": "Aggiungi selezionati",
     "Members added.": "Membri aggiunti.",
     "Member removed.": "Membro rimosso.",
-    "This list has :members members with a :rate open rate, :diff above your account average. Best engagement on Tuesday and Thursday mornings. :inactive members haven't opened in 30+ days — consider moving them to a re-engagement list.": "Questa lista ha :members membri con un tasso di apertura del :rate, :diff sopra la media del tuo account. Miglior engagement il martedì e giovedì mattina. :inactive membri non hanno aperto negli ultimi 30+ giorni — valuta di spostarli in una lista di re-engagement."
+    "This list has :members members with a :rate open rate, :diff above your account average. Best engagement on Tuesday and Thursday mornings. :inactive members haven't opened in 30+ days — consider moving them to a re-engagement list.": "Questa lista ha :members membri con un tasso di apertura del :rate, :diff sopra la media del tuo account. Miglior engagement il martedì e giovedì mattina. :inactive membri non hanno aperto negli ultimi 30+ giorni — valuta di spostarli in una lista di re-engagement.",
+    "Add to list": "Aggiungi a lista",
+    "Select lists to add this contact to.": "Seleziona le liste a cui aggiungere questo contatto.",
+    "No lists available.": "Nessuna lista disponibile.",
+    "Contact added to lists.": "Contatto aggiunto alle liste.",
+    "Contact removed from list.": "Contatto rimosso dalla lista.",
+    "Add this contact to a list.": "Aggiungi questo contatto a una lista."
 }

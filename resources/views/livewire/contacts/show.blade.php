@@ -84,25 +84,37 @@
             <div class="rounded-xl border border-zinc-200 bg-white">
                 <div class="flex items-center justify-between border-b border-zinc-100 px-5 py-4">
                     <flux:heading size="sm">{{ __('Lists') }}</flux:heading>
-                    <flux:button variant="ghost" icon="plus" size="sm">{{ __('Add') }}</flux:button>
+                    <flux:button variant="ghost" icon="plus" size="sm" wire:click="openAddToList">{{ __('Add') }}</flux:button>
                 </div>
-                <div class="divide-y divide-zinc-100">
-                    @foreach ([
-                        ['name' => 'Newsletter', 'count' => '1,248'],
-                        ['name' => 'Product Updates', 'count' => '892'],
-                        ['name' => 'VIP Customers', 'count' => '156'],
-                    ] as $list)
-                        <div class="flex items-center justify-between px-5 py-3">
-                            <div class="flex items-center gap-3">
-                                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100">
-                                    <flux:icon.users variant="mini" class="size-4 text-zinc-500" />
+                @if ($this->contactLists->isNotEmpty())
+                    <div class="divide-y divide-zinc-100">
+                        @foreach ($this->contactLists as $list)
+                            <div class="flex items-center justify-between px-5 py-3">
+                                <a href="{{ route('lists.show', $list) }}" wire:navigate class="flex items-center gap-3 transition-colors hover:text-wine-800">
+                                    <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100">
+                                        <flux:icon :name="$list->icon" variant="mini" class="size-4 text-zinc-500" />
+                                    </div>
+                                    <flux:text class="font-medium">{{ $list->name }}</flux:text>
+                                </a>
+                                <div class="flex items-center gap-2">
+                                    <flux:badge size="sm" color="zinc" inset="top bottom">{{ number_format($list->contacts_count) }}</flux:badge>
+                                    <flux:tooltip content="{{ __('Remove') }}" position="top">
+                                        <button wire:click="removeFromList({{ $list->id }})" class="flex h-7 w-7 items-center justify-center rounded-full text-zinc-300 transition hover:bg-red-50 hover:text-red-600">
+                                            <flux:icon.x-mark variant="mini" class="size-3.5" />
+                                        </button>
+                                    </flux:tooltip>
                                 </div>
-                                <flux:text class="font-medium">{{ $list['name'] }}</flux:text>
                             </div>
-                            <flux:badge size="sm" color="zinc" inset="top bottom">{{ $list['count'] }}</flux:badge>
-                        </div>
-                    @endforeach
-                </div>
+                        @endforeach
+                    </div>
+                @else
+                    <x-empty-state
+                        icon="rectangle-stack"
+                        :heading="__('No lists yet.')"
+                        :description="__('Add this contact to a list.')"
+                        class="py-8"
+                    />
+                @endif
             </div>
         </div>
 
@@ -139,4 +151,48 @@
             </div>
         </div>
     </div>
+
+    {{-- Add to list modal --}}
+    <flux:modal name="add-to-list" class="max-w-md md:min-w-md">
+        <div class="space-y-5">
+            <div>
+                <flux:heading size="lg">{{ __('Add to list') }}</flux:heading>
+                <flux:subheading>{{ __('Select lists to add this contact to.') }}</flux:subheading>
+            </div>
+
+            <flux:input wire:model.live.debounce.300ms="listSearch" icon="magnifying-glass" :placeholder="__('Search lists...')" size="sm" />
+
+            <div class="max-h-64 divide-y divide-zinc-100 overflow-y-auto rounded-xl border border-zinc-200">
+                @forelse ($this->availableLists as $list)
+                    <label class="flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors hover:bg-zinc-50">
+                        <flux:checkbox wire:model="selectedLists" value="{{ $list->id }}" />
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-100">
+                                <flux:icon :name="$list->icon" variant="mini" class="size-4 text-zinc-500" />
+                            </div>
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-medium text-zinc-900">{{ $list->name }}</p>
+                                @if ($list->description)
+                                    <p class="truncate text-xs text-zinc-400">{{ $list->description }}</p>
+                                @endif
+                            </div>
+                        </div>
+                    </label>
+                @empty
+                    <div class="px-4 py-8 text-center">
+                        <flux:text variant="subtle">{{ __('No lists available.') }}</flux:text>
+                    </div>
+                @endforelse
+            </div>
+
+            <div class="flex gap-3">
+                <flux:modal.close>
+                    <flux:button variant="filled" class="w-full">{{ __('Cancel') }}</flux:button>
+                </flux:modal.close>
+                <flux:button variant="primary" class="w-full" wire:click="addToLists">
+                    {{ __('Add selected') }}
+                </flux:button>
+            </div>
+        </div>
+    </flux:modal>
 </div>
