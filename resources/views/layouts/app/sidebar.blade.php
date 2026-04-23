@@ -86,6 +86,20 @@
                     </a>
                 </flux:tooltip>
 
+                <flux:tooltip content="{{ __('Lists') }}" position="right">
+                    <a
+                        href="{{ route('lists.index') }}"
+                        wire:navigate
+                        @class([
+                            'flex h-11 w-11 items-center justify-center rounded-full transition',
+                            'bg-wine-800 text-white shadow-md shadow-wine-900/20' => request()->routeIs('lists.*'),
+                            'text-zinc-400 hover:bg-zinc-100 hover:text-wine-800' => !request()->routeIs('lists.*'),
+                        ])
+                    >
+                        <flux:icon.rectangle-stack variant="mini" />
+                    </a>
+                </flux:tooltip>
+
                 <flux:tooltip content="{{ __('Settings') }}" position="right">
                     <a
                         href="{{ route('profile.edit') }}"

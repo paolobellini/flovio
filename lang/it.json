@@ -173,5 +173,15 @@
     "Are you sure you want to delete the selected contacts? This action cannot be undone.": "Sei sicuro di voler eliminare i contatti selezionati? Questa azione non può essere annullata.",
     ":count contacts deleted.": ":count contatti eliminati.",
     "Try adjusting your search or filters.": "Prova a modificare la ricerca o i filtri.",
-    "Clear filters": "Cancella filtri"
+    "Clear filters": "Cancella filtri",
+    "Organize your contacts into targeted groups for campaigns.": "Organizza i tuoi contatti in gruppi mirati per le campagne.",
+    "Create list": "Crea lista",
+    "Total lists": "Totale liste",
+    "Total members": "Totale membri",
+    "Last updated": "Ultimo aggiornamento",
+    "Search lists...": "Cerca liste...",
+    "contacts": "contatti",
+    "View list": "Visualizza lista",
+    "No lists yet.": "Nessuna lista ancora.",
+    "Create your first list to start organizing contacts.": "Crea la tua prima lista per iniziare a organizzare i contatti."
 }

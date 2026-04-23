@@ -6,6 +6,7 @@ use App\Http\Middleware\EnsureUserIsOnboarded;
 use App\Http\Middleware\RedirectIfOnboarded;
 use App\Livewire\Contacts\Index as ContactsIndex;
 use App\Livewire\Contacts\Show as ContactsShow;
+use App\Livewire\Lists\Index as ListsIndex;
 use App\Livewire\Onboarding\Wizard;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard')->middleware(EnsureUserIsOnboarded::class);
     Route::livewire('contacts', ContactsIndex::class)->name('contacts.index')->middleware(EnsureUserIsOnboarded::class);
     Route::livewire('contacts/{contact}', ContactsShow::class)->name('contacts.show')->middleware(EnsureUserIsOnboarded::class);
+    Route::livewire('lists', ListsIndex::class)->name('lists.index')->middleware(EnsureUserIsOnboarded::class);
 });
 
 require __DIR__.'/settings.php';
