@@ -40,7 +40,7 @@
 
             <flux:separator vertical class="my-auto h-6" />
 
-            <flux:button variant="ghost" icon="arrow-up-tray">{{ __('Import') }}</flux:button>
+            <flux:button variant="ghost" icon="arrow-up-tray" x-on:click="$dispatch('modal-show', { name: 'import-contacts' })">{{ __('Import') }}</flux:button>
         </div>
     </div>
 
@@ -192,6 +192,9 @@
         :description="__('Are you sure you want to delete the selected contacts? This action cannot be undone.')"
         action="bulkDelete"
     />
+
+    {{-- Import contacts modal --}}
+    <livewire:contacts.import />
 
     {{-- Bulk actions floating bar --}}
     <x-bulk-actions>
