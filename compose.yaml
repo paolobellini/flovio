@@ -51,31 +51,6 @@ services:
             retries: 3
             timeout: 5s
 
-    pgsql_test:
-        image: 'postgres:18-alpine'
-        ports:
-            - '${FORWARD_DB_PORT_TEST:-5433}:5432'
-        environment:
-            PGPASSWORD: '${DB_PASSWORD_TEST:-secret}'
-            POSTGRES_DB: '${DB_DATABASE_TEST}'
-            POSTGRES_USER: '${DB_USERNAME_TEST}'
-            POSTGRES_PASSWORD: '${DB_PASSWORD_TEST:-secret}'
-        volumes:
-            - 'sail-pgsql-test:/var/lib/postgresql/data'
-        networks:
-            - sail
-        healthcheck:
-            test:
-                - CMD
-                - pg_isready
-                - '-q'
-                - '-d'
-                - '${DB_DATABASE_TEST}'
-                - '-U'
-                - '${DB_USERNAME_TEST}'
-            retries: 3
-            timeout: 5s
-
     redis:
         image: 'redis:alpine'
         ports:
@@ -103,8 +78,6 @@ networks:
         driver: bridge
 volumes:
     sail-pgsql:
-        driver: local
-    sail-pgsql-test:
         driver: local
     sail-redis:
         driver: local
