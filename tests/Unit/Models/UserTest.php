@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\ContactImport;
 use App\Models\SmtpSetting;
 use App\Models\User;
 
@@ -29,4 +30,12 @@ test('user has smtp setting relationship', function () {
     SmtpSetting::factory()->for($user)->create();
 
     expect($user->smtpSetting)->toBeInstanceOf(SmtpSetting::class);
+});
+
+test('user has many contact imports', function () {
+    $user = User::factory()->create();
+    ContactImport::factory()->count(3)->for($user)->create();
+
+    expect($user->contactImports)->toHaveCount(3)
+        ->each->toBeInstanceOf(ContactImport::class);
 });

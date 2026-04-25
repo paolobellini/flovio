@@ -6,7 +6,9 @@ namespace App\Models;
 
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -27,6 +29,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property ?Carbon $created_at
  * @property ?Carbon $updated_at
  * @property-read AiSetting $aiSetting
+ * @property-read Collection<int, ContactImport> $contactImports
  * @property-read SmtpSetting $smtpSetting
  */
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
@@ -52,6 +55,14 @@ final class User extends Authenticatable
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    /**
+     * @return HasMany<ContactImport, $this>
+     */
+    public function contactImports(): HasMany
+    {
+        return $this->hasMany(ContactImport::class);
     }
 
     /**
