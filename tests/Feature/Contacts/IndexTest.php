@@ -101,7 +101,6 @@ test('contact can be deleted', function () {
         ->call('confirmDelete', $contact->id)
         ->assertSet('confirmingDelete.id', $contact->id)
         ->call('delete')
-        ->assertSet('confirmingDelete', null)
         ->assertHasNoErrors();
 
     $this->assertDatabaseMissing('contacts', ['id' => $contact->id]);

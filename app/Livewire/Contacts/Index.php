@@ -28,7 +28,7 @@ final class Index extends Component
 
     public string $status = '';
 
-    public ?Contact $confirmingDelete = null;
+    public Contact $confirmingDelete;
 
     /** @var array<int, int> */
     public array $selected = [];
@@ -114,8 +114,6 @@ final class Index extends Component
     public function delete(DestroyContactAction $action): void
     {
         $action->handle($this->confirmingDelete);
-
-        $this->confirmingDelete = null;
 
         $this->dispatch('modal-close', name: 'confirm-delete-contact');
         Flux::toast(variant: 'success', text: __('Contact deleted.'));

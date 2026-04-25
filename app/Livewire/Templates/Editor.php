@@ -57,10 +57,14 @@ final class Editor extends Component
 
     public function delete(DestroyTemplateAction $action): void
     {
+        if ($this->template === null) {
+            return;
+        }
+
         $action->handle($this->template);
 
         $this->dispatch('modal-close', name: 'confirm-delete-template');
-        Flux::toast(variant: 'success', text: __('Template deleted.'));
+        Flux::toast(text: __('Template deleted.'), variant: 'success');
 
         $this->redirectRoute('templates.index', navigate: true);
     }
@@ -68,14 +72,14 @@ final class Editor extends Component
     public function save(StoreTemplateAction $store, UpdateTemplateAction $update): void
     {
         /** @var array<string, mixed> $validated */
-        $validated = $this->validate((new TemplateRequest())->rules());
+        $validated = $this->validate(new TemplateRequest()->rules());
 
-        if ($this->isEditing) {
+        if ($this->isEditing() && $this->template !== null) {
             $update->handle($this->template, $validated);
-            Flux::toast(variant: 'success', text: __('Template updated.'));
+            Flux::toast(text: __('Template updated.'), variant: 'success');
         } else {
             $template = $store->handle($validated);
-            Flux::toast(variant: 'success', text: __('Template created.'));
+            Flux::toast(text: __('Template created.'), variant: 'success');
 
             $this->redirectRoute('templates.edit', $template, navigate: true);
         }

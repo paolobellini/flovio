@@ -21,7 +21,7 @@ final class Index extends Component
 {
     public string $search = '';
 
-    public ?MailingList $confirmingDelete = null;
+    public MailingList $confirmingDelete;
 
     public string $name = '';
 
@@ -80,8 +80,6 @@ final class Index extends Component
     public function delete(DestroyMailingListAction $action): void
     {
         $action->handle($this->confirmingDelete);
-
-        $this->confirmingDelete = null;
 
         $this->dispatch('modal-close', name: 'confirm-delete-list');
         Flux::toast(variant: 'success', text: __('List deleted.'));

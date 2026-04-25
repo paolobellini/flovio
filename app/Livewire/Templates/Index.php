@@ -18,7 +18,7 @@ final class Index extends Component
 {
     public string $search = '';
 
-    public ?Template $confirmingDelete = null;
+    public Template $confirmingDelete;
 
     public function confirmDelete(Template $template): void
     {
@@ -31,7 +31,7 @@ final class Index extends Component
     {
         $action->handle($this->confirmingDelete);
 
-        $this->confirmingDelete = null;
+        $this->confirmingDelete = new Template();
 
         $this->dispatch('modal-close', name: 'confirm-delete-template');
         Flux::toast(variant: 'success', text: __('Template deleted.'));
@@ -54,6 +54,6 @@ final class Index extends Component
                 ->toArray(),
         );
 
-        return Template::hydrate($cached);
+        return Template::query()->hydrate($cached);
     }
 }
