@@ -21,7 +21,7 @@ final class Import extends Component
     public int $step = 1;
 
     #[Validate('required|file|mimes:csv,txt|max:5120')]
-    public TemporaryUploadedFile $file;
+    public ?TemporaryUploadedFile $file = null;
 
     /** @var array<int, string> */
     public array $headers = [];
@@ -66,6 +66,10 @@ final class Import extends Component
         /** @var array<string, mixed> $validated */
         $validated = $this->validate(new ContactImportRequest()->rules());
 
+        if (! $this->file) {
+            return;
+        }
+
         $action->handle($user, $this->file, $validated);
 
         $this->step = 3;
@@ -84,6 +88,10 @@ final class Import extends Component
 
     private function parsePreview(): void
     {
+        if (! $this->file) {
+            return;
+        }
+
         $path = $this->file->getRealPath();
 
         $this->delimiter = $this->detectDelimiter($path);
