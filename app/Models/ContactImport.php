@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
  * @property-read int $id
  * @property int $user_id
  * @property string $file_name
+ * @property string $file_path
  * @property ImportStatus $status
  * @property string $delimiter
  * @property string $name_column
@@ -44,6 +45,7 @@ final class ContactImport extends Model
             'id' => 'integer',
             'user_id' => 'integer',
             'file_name' => 'string',
+            'file_path' => 'string',
             'status' => ImportStatus::class,
             'delimiter' => 'string',
             'name_column' => 'string',

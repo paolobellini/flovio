@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Livewire\Contacts;
 
+use App\Actions\StoreContactImportAction;
+use App\Http\Requests\ContactImportRequest;
+use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -17,7 +21,7 @@ final class Import extends Component
     public int $step = 1;
 
     #[Validate('required|file|mimes:csv,txt|max:5120')]
-    public ?TemporaryUploadedFile $file = null;
+    public TemporaryUploadedFile $file;
 
     /** @var array<int, string> */
     public array $headers = [];
@@ -57,8 +61,13 @@ final class Import extends Component
         $this->step = 2;
     }
 
-    public function import(): void
+    public function import(#[CurrentUser] User $user, StoreContactImportAction $action): void
     {
+        /** @var array<string, mixed> $validated */
+        $validated = $this->validate(new ContactImportRequest()->rules());
+
+        $action->handle($user, $this->file, $validated);
+
         $this->step = 3;
     }
 
@@ -75,10 +84,6 @@ final class Import extends Component
 
     private function parsePreview(): void
     {
-        if (! $this->file) {
-            return;
-        }
-
         $path = $this->file->getRealPath();
 
         $this->delimiter = $this->detectDelimiter($path);

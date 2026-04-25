@@ -22,6 +22,7 @@ final class ContactImportFactory extends Factory
         return [
             'user_id' => User::factory(),
             'file_name' => fake()->word().'.csv',
+            'file_path' => 'imports/'.fake()->word().'.csv',
             'status' => ImportStatus::Pending,
             'delimiter' => ',',
             'name_column' => 'name',

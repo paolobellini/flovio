@@ -14,6 +14,7 @@ test('contact import has expected attributes', function () {
         'id',
         'user_id',
         'file_name',
+        'file_path',
         'status',
         'delimiter',
         'name_column',
