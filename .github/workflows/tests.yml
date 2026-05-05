@@ -2,10 +2,27 @@ name: tests
 
 on:
   push:
-      branches: [main, beta]
+      branches: [ main, staging ]
+
+  pull_request:
+    branches: [ main, staging, develop ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  ci:
+  type:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/php-setup
+      - run: composer type
+
+  coverage:
     runs-on: ubuntu-latest
     environment: testing
 
@@ -17,7 +34,7 @@ jobs:
           POSTGRES_PASSWORD: password
           POSTGRES_DB: testing
         ports:
-          - 5434:5432
+          - 5432:5432
         options: >-
           --health-cmd "pg_isready -U sail -d testing"
           --health-interval 5s
@@ -33,42 +50,11 @@ jobs:
       DB_PASSWORD: password
 
     steps:
-      - name: checkout code
-        uses: actions/checkout@v6
-
-      - name: setup php
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.5'
-          extensions: ffi
-          coverage: xdebug
-          ini-values: ffi.enable=true
-
-      - name: setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: '24'
-
-      - name: install node dependencies
-        run: npm i
-
-      - name: install dependencies
-        run: |
-          composer install --no-interaction --prefer-dist --no-plugins --no-scripts
-          composer dump-autoload --no-scripts
-          composer install --no-interaction --prefer-dist
-
-      - name: copy env file
-        run: cp .env.example .env
-
-      - name: generate application key
-        run: php artisan key:generate
-
-      - name: build assets
-        run: npm run build
-
-      - name: run type tests
-        run: composer type
-
-      - name: run coverage tests
-        run: composer coverage
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/php-setup
+        with: { coverage: xdebug }
+      - uses: actions/setup-node@v6
+        with: { node-version: '24' }
+      - run: npm ci && npm run build
+      - run: cp .env.example .env && php artisan key:generate
+      - run: composer coverage
