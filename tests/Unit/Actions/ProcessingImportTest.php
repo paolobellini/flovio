@@ -19,8 +19,5 @@ test('mark contact import processing flips status and dispatches event', functio
 
     expect($import->refresh()->status)->toBe(ImportStatus::Processing);
 
-    Event::assertDispatched(
-        ContactImportProcessing::class,
-        fn (ContactImportProcessing $e): bool => $e->contactImport->is($import),
-    );
+    Event::assertDispatched(fn (ContactImportProcessing $e): bool => $e->contactImport->is($import));
 });

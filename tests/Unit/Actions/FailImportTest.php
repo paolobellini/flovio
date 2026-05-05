@@ -24,10 +24,7 @@ test('mark contact import failed stores error and dispatches event', function ()
     expect($import->status)->toBe(ImportStatus::Failed)
         ->and($import->errors)->toBe([['message' => 'boom']]);
 
-    Event::assertDispatched(
-        ContactImportFailed::class,
-        fn (ContactImportFailed $e): bool => $e->contactImport->is($import)
-            && $e->exception === $exception
-            && $e->durationSeconds === 0.5,
-    );
+    Event::assertDispatched(fn (ContactImportFailed $e): bool => $e->contactImport->is($import)
+        && $e->exception === $exception
+        && $e->durationSeconds === 0.5);
 });

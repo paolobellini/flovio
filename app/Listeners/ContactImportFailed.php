@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
-use App\Events\ContactImportFailed;
+use App\Events\ContactImportFailed as ContactImportFailedEvent;
 use Illuminate\Support\Facades\Log;
 
-final class LogContactImportFailed
+final class ContactImportFailed
 {
-    public function handle(ContactImportFailed $event): void
+    public function handle(ContactImportFailedEvent $event): void
     {
         Log::channel('imports')->error('Contact import failed', [
             'contact_import_id' => $event->contactImport->id,

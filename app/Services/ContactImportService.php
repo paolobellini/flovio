@@ -135,7 +135,15 @@ final class ContactImportService
     private function queryValidRows(DuckDB $db): Collection
     {
         $result = $db->query(sprintf(
-            "SELECT name, email FROM (
+            "SELECT array_to_string(
+                list_transform(
+                    string_split(name, ' '),
+                    word -> CASE WHEN length(word) > 0
+                                 THEN upper(substr(word, 1, 1)) || lower(substr(word, 2))
+                                 ELSE word END
+                ),
+                ' '
+            ) AS name, email FROM (
                 SELECT name, email, ROW_NUMBER() OVER (PARTITION BY email ORDER BY row_num) AS rn
                 FROM %s
                 WHERE regexp_matches(email, '%s')

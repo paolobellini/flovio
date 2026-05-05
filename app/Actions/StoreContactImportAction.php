@@ -20,7 +20,7 @@ final readonly class StoreContactImportAction
             name: uniqid('contacts_').'.csv',
         );
 
-        return ContactImport::create([
+        return ContactImport::query()->create([
             'user_id' => $user->id,
             'file_name' => $file->getClientOriginalName(),
             'file_path' => $path,

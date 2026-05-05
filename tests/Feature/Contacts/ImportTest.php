@@ -43,11 +43,8 @@ test('import stores file, creates record, and dispatches processing job', functi
         'status' => 'pending',
     ]);
 
-    Bus::assertDispatched(
-        ProcessContactImportJob::class,
-        fn (ProcessContactImportJob $job): bool => $job->contactImport->user_id === $user->id
-            && $job->contactImport->file_name === 'contacts.csv',
-    );
+    Bus::assertDispatched(fn (ProcessContactImportJob $job): bool => $job->contactImport->user_id === $user->id
+        && $job->contactImport->file_name === 'contacts.csv');
 });
 
 test('import validates required columns', function () {

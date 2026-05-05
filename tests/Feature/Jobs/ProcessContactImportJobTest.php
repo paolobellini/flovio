@@ -9,12 +9,12 @@ use App\Models\ContactImport;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 
-test('job reads csv with duckdb and updates import record', function () {
+test('job reads csv with duckdb, capitalizes names, and updates import record', function () {
     $disk = Storage::fake('local');
 
     $user = User::factory()->onboarded()->create();
 
-    $csvContent = "Name;Email\nMarco Rossi;marco@example.com\nLucia Bianchi;lucia@example.com\n";
+    $csvContent = "Name;Email\nmarco rossi;marco@example.com\nLUCIA BIANCHI;lucia@example.com\n";
 
     $path = 'imports/contacts_test.csv';
     $disk->put($path, $csvContent);
@@ -40,8 +40,8 @@ test('job reads csv with duckdb and updates import record', function () {
         ->and($import->failed_count)->toBe(0)
         ->and($import->completed_at)->not->toBeNull();
 
-    expect(Contact::query()->where('email', 'marco@example.com')->exists())->toBeTrue()
-        ->and(Contact::query()->where('email', 'lucia@example.com')->exists())->toBeTrue();
+    expect(Contact::query()->where('email', 'marco@example.com')->value('name'))->toBe('Marco Rossi')
+        ->and(Contact::query()->where('email', 'lucia@example.com')->value('name'))->toBe('Lucia Bianchi');
 });
 
 test('job marks rows with invalid email as failed', function () {

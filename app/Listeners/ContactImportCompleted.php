@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
-use App\Events\ContactImportCompleted;
+use App\Events\ContactImportCompleted as ContactImportCompletedEvent;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
-final class LogContactImportCompleted
+final class ContactImportCompleted
 {
-    public function handle(ContactImportCompleted $event): void
+    public function handle(ContactImportCompletedEvent $event): void
     {
         Log::channel('imports')->info('Contact import completed', [
             'contact_import_id' => $event->contactImport->id,
@@ -21,5 +22,7 @@ final class LogContactImportCompleted
             'invalid' => $event->analysis->invalid,
             'duplicates' => $event->analysis->duplicates,
         ]);
+
+        Cache::tags(['contacts'])->flush();
     }
 }

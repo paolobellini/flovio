@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Events\ContactImportFailed;
-use App\Listeners\LogContactImportFailed;
+use App\Events\ContactImportFailed as ContactImportFailedEvent;
+use App\Listeners\ContactImportFailed;
 use App\Models\ContactImport;
 use Illuminate\Support\Facades\Log;
 
@@ -22,7 +22,7 @@ test('failed listener writes error entry to imports channel', function () {
 
     $import = ContactImport::factory()->create();
 
-    resolve(LogContactImportFailed::class)->handle(
-        new ContactImportFailed($import, new RuntimeException('boom'), 0.75),
+    resolve(ContactImportFailed::class)->handle(
+        new ContactImportFailedEvent($import, new RuntimeException('boom'), 0.75),
     );
 });

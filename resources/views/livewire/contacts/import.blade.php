@@ -27,67 +27,47 @@
             </div>
         @endif
 
-        {{-- Step 2: Preview & Map --}}
+        {{-- Step 2: Map columns --}}
         @if ($step === 2)
             <div class="space-y-6">
                 <div>
                     <flux:heading size="lg">{{ __('Map columns') }}</flux:heading>
-                    <flux:subheading>{{ __(':count rows found. Assign each column to a contact field.', ['count' => $totalRows]) }}</flux:subheading>
+                    <flux:subheading>{{ __(':count rows found. Pick which column holds the name and which holds the email.', ['count' => $totalRows]) }}</flux:subheading>
                 </div>
 
-                {{-- Visual column cards --}}
-                <div class="grid gap-3" style="grid-template-columns: repeat({{ min(count($headers), 4) }}, minmax(0, 1fr));">
-                    @foreach ($headers as $headerIndex => $header)
-                        @php
-                            $mappedAs = match($header) {
-                                $nameColumn => 'name',
-                                $emailColumn => 'email',
-                                default => null,
-                            };
-                            $borderColor = match($mappedAs) {
-                                'name' => 'border-sky-300 bg-sky-50/50',
-                                'email' => 'border-violet-300 bg-violet-50/50',
-                                default => 'border-zinc-200 bg-white',
-                            };
-                        @endphp
-                        <div class="rounded-lg border-2 {{ $borderColor }} p-3 transition-colors">
-                            {{-- Column header --}}
-                            <div class="mb-2 flex items-center justify-between">
-                                <span class="text-xs font-semibold tracking-wide text-zinc-500 uppercase">{{ $header }}</span>
-                                @if ($mappedAs === 'name')
-                                    <flux:badge size="sm" color="sky">{{ __('Name') }}</flux:badge>
-                                @elseif ($mappedAs === 'email')
-                                    <flux:badge size="sm" color="violet">{{ __('Email') }}</flux:badge>
-                                @endif
-                            </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <flux:select wire:model.live="nameColumn" :label="__('Name column')" :placeholder="__('Select a column')">
+                        @foreach ($headers as $header)
+                            <flux:select.option value="{{ $header }}">{{ $header }}</flux:select.option>
+                        @endforeach
+                    </flux:select>
 
-                            {{-- Sample values --}}
-                            <div class="mb-3 space-y-1">
-                                @foreach (array_slice($previewRows, 0, 3) as $row)
-                                    <p class="truncate text-sm text-zinc-600">{{ $row[$headerIndex] ?? '—' }}</p>
-                                @endforeach
-                            </div>
+                    <flux:select wire:model.live="emailColumn" :label="__('Email column')" :placeholder="__('Select a column')">
+                        @foreach ($headers as $header)
+                            <flux:select.option value="{{ $header }}">{{ $header }}</flux:select.option>
+                        @endforeach
+                    </flux:select>
+                </div>
 
-                            {{-- Mapping toggle buttons --}}
-                            <div class="flex gap-1">
-                                <button
-                                    type="button"
-                                    wire:click="$set('nameColumn', '{{ $header === $nameColumn ? '' : $header }}')"
-                                    class="flex-1 rounded px-2 py-1 text-xs font-medium transition-colors {{ $mappedAs === 'name' ? 'bg-sky-200 text-sky-800' : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200' }}"
-                                >
-                                    {{ __('Name') }}
-                                </button>
-                                <button
-                                    type="button"
-                                    wire:click="$set('emailColumn', '{{ $header === $emailColumn ? '' : $header }}')"
-                                    class="flex-1 rounded px-2 py-1 text-xs font-medium transition-colors {{ $mappedAs === 'email' ? 'bg-violet-200 text-violet-800' : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200' }}"
-                                >
-                                    {{ __('Email') }}
-                                </button>
-                            </div>
+                @if ($nameColumn && $emailColumn && $previewRows !== [])
+                    @php
+                        $nameIndex = array_search($nameColumn, $headers, true);
+                        $emailIndex = array_search($emailColumn, $headers, true);
+                    @endphp
+
+                    <div class="rounded-lg border border-zinc-200 bg-zinc-50/50">
+                        <div class="grid grid-cols-2 border-b border-zinc-200 px-4 py-2 text-xs font-semibold tracking-wide text-zinc-500 uppercase">
+                            <span>{{ __('Name') }}</span>
+                            <span>{{ __('Email') }}</span>
                         </div>
-                    @endforeach
-                </div>
+                        @foreach (array_slice($previewRows, 0, 3) as $row)
+                            <div class="grid grid-cols-2 px-4 py-2 text-sm text-zinc-700 not-last:border-b not-last:border-zinc-200">
+                                <span class="truncate">{{ $nameIndex !== false ? ($row[$nameIndex] ?? '—') : '—' }}</span>
+                                <span class="truncate">{{ $emailIndex !== false ? ($row[$emailIndex] ?? '—') : '—' }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
 
                 <div class="flex gap-3 pt-2">
                     <flux:button variant="filled" class="w-full" wire:click="$set('step', 1)">
@@ -113,9 +93,9 @@
                     </div>
                 </div>
 
-                <div class="flex pt-2">
+                <div class="flex justify-center pt-2">
                     <flux:modal.close>
-                        <flux:button variant="primary" class="w-full">{{ __('Close') }}</flux:button>
+                        <flux:button variant="primary">{{ __('Close') }}</flux:button>
                     </flux:modal.close>
                 </div>
             </div>

@@ -45,12 +45,9 @@ test('mark contact import completed inserts contacts, persists stats, and dispat
 
     expect(Contact::query()->whereIn('email', ['marco@example.com', 'lucia@example.com'])->count())->toBe(2);
 
-    Event::assertDispatched(
-        ContactImportCompleted::class,
-        fn (ContactImportCompleted $e): bool => $e->contactImport->is($import)
-            && $e->durationSeconds === 1.234
-            && $e->analysis === $analysis,
-    );
+    Event::assertDispatched(fn (ContactImportCompleted $e): bool => $e->contactImport->is($import)
+        && $e->durationSeconds === 1.234
+        && $e->analysis === $analysis);
 });
 
 test('mark contact import completed counts existing emails as skipped', function () {
