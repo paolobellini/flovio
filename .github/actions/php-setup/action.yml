@@ -1,0 +1,25 @@
+name: php-setup
+description: Setup PHP 8.5, FFI, and install composer deps with two-pass workaround
+
+runs:
+  using: composite
+  steps:
+    - name: setup php
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.5'
+        extensions: ffi
+        ini-values: ffi.enable=true
+
+    - uses: actions/cache@v4
+      with:
+        path: vendor
+        key: composer-${{ hashFiles('composer.lock') }}
+        restore-keys: composer-
+
+    - name: install dependencies
+      shell: bash
+      run: |
+        composer install --no-interaction --prefer-dist --no-plugins --no-scripts
+        composer dump-autoload --no-scripts
+        composer install --no-interaction --prefer-dist
