@@ -2,13 +2,16 @@
 
 declare(strict_types=1);
 
+use App\Jobs\ProcessContactImportJob;
 use App\Livewire\Contacts\Import;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
-test('import stores file and creates contact import record', function () {
+test('import stores file, creates record, and dispatches processing job', function () {
+    Bus::fake();
     Storage::fake('local');
 
     $user = User::factory()->onboarded()->create();
@@ -39,6 +42,12 @@ test('import stores file and creates contact import record', function () {
         'total_rows' => 2,
         'status' => 'pending',
     ]);
+
+    Bus::assertDispatched(
+        ProcessContactImportJob::class,
+        fn (ProcessContactImportJob $job): bool => $job->contactImport->user_id === $user->id
+            && $job->contactImport->file_name === 'contacts.csv',
+    );
 });
 
 test('import validates required columns', function () {

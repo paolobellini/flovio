@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\DTOs\ContactImportAnalysis;
 use App\Models\ContactImport;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Saturio\DuckDB\DuckDB;
 
@@ -129,9 +130,9 @@ final class ContactImportService
     }
 
     /**
-     * @return iterable<int, array{name: string, email: string}>
+     * @return Collection<int, array{name: string, email: string}>
      */
-    private function queryValidRows(DuckDB $db): iterable
+    private function queryValidRows(DuckDB $db): Collection
     {
         $result = $db->query(sprintf(
             "SELECT name, email FROM (
@@ -143,7 +144,14 @@ final class ContactImportService
             self::EMAIL_REGEX,
         ));
 
-        return $result->rows(columnNameAsKey: true);
+        $rows = [];
+
+        /** @var array{name: string, email: string} $row */
+        foreach ($result->rows(columnNameAsKey: true) as $row) {
+            $rows[] = $row;
+        }
+
+        return Collection::make($rows);
     }
 
     private function quoteIdentifier(string $identifier): string

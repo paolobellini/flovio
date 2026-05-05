@@ -100,37 +100,22 @@
             </div>
         @endif
 
-        {{-- Step 3: Results --}}
+        {{-- Step 3: Started --}}
         @if ($step === 3)
             <div class="space-y-6">
                 <div class="flex flex-col items-center space-y-4">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                        <flux:icon.check-circle class="size-6 text-green-600" />
+                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-sky-100">
+                        <flux:icon.paper-airplane class="size-6 text-sky-600" />
                     </div>
                     <div class="space-y-2 text-center">
-                        <flux:heading size="lg">{{ __('Import complete') }}</flux:heading>
-                        <flux:subheading>{{ __('Your contacts have been processed.') }}</flux:subheading>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-3">
-                    <div class="rounded-lg border border-green-200 bg-green-50 p-3 text-center">
-                        <div class="text-lg font-semibold text-green-700">{{ $createdCount }}</div>
-                        <flux:text variant="subtle" class="text-xs">{{ __('Created') }}</flux:text>
-                    </div>
-                    <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-center">
-                        <div class="text-lg font-semibold text-zinc-600">{{ $skippedCount }}</div>
-                        <flux:text variant="subtle" class="text-xs">{{ __('Skipped') }}</flux:text>
-                    </div>
-                    <div class="rounded-lg border border-red-200 bg-red-50 p-3 text-center">
-                        <div class="text-lg font-semibold text-red-700">{{ $failedCount }}</div>
-                        <flux:text variant="subtle" class="text-xs">{{ __('Failed') }}</flux:text>
+                        <flux:heading size="lg">{{ __('Import started') }}</flux:heading>
+                        <flux:subheading>{{ __('You can close this window. We will notify you when the import is finished.') }}</flux:subheading>
                     </div>
                 </div>
 
                 <div class="flex pt-2">
                     <flux:modal.close>
-                        <flux:button variant="primary" class="w-full">{{ __('Done') }}</flux:button>
+                        <flux:button variant="primary" class="w-full">{{ __('Close') }}</flux:button>
                     </flux:modal.close>
                 </div>
             </div>

@@ -6,6 +6,7 @@ use App\DTOs\ContactImportAnalysis;
 use App\Events\ContactImportCompleted;
 use App\Listeners\LogContactImportCompleted;
 use App\Models\ContactImport;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 test('completed listener writes info entry to imports channel', function () {
@@ -24,7 +25,7 @@ test('completed listener writes info entry to imports channel', function () {
     Log::shouldReceive('channel')->with('imports')->once()->andReturn($channel);
 
     $import = ContactImport::factory()->create();
-    $analysis = new ContactImportAnalysis(total: 5, valid: 4, invalid: 1, duplicates: 0, validRows: []);
+    $analysis = new ContactImportAnalysis(total: 5, valid: 4, invalid: 1, duplicates: 0, validRows: Collection::make());
 
     resolve(LogContactImportCompleted::class)->handle(
         new ContactImportCompleted($import, $analysis, 2.5),

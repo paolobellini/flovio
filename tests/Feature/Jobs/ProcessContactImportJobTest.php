@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Enums\ImportStatus;
 use App\Jobs\ProcessContactImportJob;
+use App\Models\Contact;
 use App\Models\ContactImport;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
@@ -38,6 +39,9 @@ test('job reads csv with duckdb and updates import record', function () {
         ->and($import->skipped_count)->toBe(0)
         ->and($import->failed_count)->toBe(0)
         ->and($import->completed_at)->not->toBeNull();
+
+    expect(Contact::query()->where('email', 'marco@example.com')->exists())->toBeTrue()
+        ->and(Contact::query()->where('email', 'lucia@example.com')->exists())->toBeTrue();
 });
 
 test('job marks rows with invalid email as failed', function () {

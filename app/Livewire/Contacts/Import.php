@@ -6,6 +6,7 @@ namespace App\Livewire\Contacts;
 
 use App\Actions\StoreContactImportAction;
 use App\Http\Requests\ContactImportRequest;
+use App\Jobs\ProcessContactImportJob;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Contracts\View\View;
@@ -37,12 +38,6 @@ final class Import extends Component
 
     public int $totalRows = 0;
 
-    public int $createdCount = 0;
-
-    public int $skippedCount = 0;
-
-    public int $failedCount = 0;
-
     public function updatedFile(): void
     {
         $this->validateOnly('file');
@@ -70,7 +65,9 @@ final class Import extends Component
             return;
         }
 
-        $action->handle($user, $this->file, $validated);
+        $import = $action->handle($user, $this->file, $validated);
+
+        ProcessContactImportJob::dispatch($import);
 
         $this->step = 3;
     }
