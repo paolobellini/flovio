@@ -1,0 +1,37 @@
+name: static analysis & refactoring
+
+on:
+  push:
+    branches: [ main, staging ]
+
+  pull_request:
+    branches: [ main, staging, develop ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    environment: testing
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/php-setup
+
+      - name: run static analysis
+        run: composer analyse
+
+  refactoring:
+    runs-on: ubuntu-latest
+    environment: testing
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/php-setup
+
+      - name: run refactoring analysis
+        run: composer check:refactor
+

@@ -1,4 +1,12 @@
 <x-layouts::auth.split :title="__('Register')">
+    <a href="{{ route('home') }}"
+        class="fixed top-6 left-6 z-20 inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 transition hover:text-wine-800"
+        wire:navigate
+    >
+        <flux:icon.arrow-left variant="micro" />
+        {{ __('Back to home') }}
+    </a>
+
     <div class="flex flex-col gap-8">
         <div class="flex flex-col gap-1 text-center">
             <h1 class="text-2xl font-bold tracking-tight text-zinc-900">{{ __('Create an account') }}</h1>

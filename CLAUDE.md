@@ -106,6 +106,16 @@ Run a single test: `vendor/bin/sail artisan test --compact --filter=testName`
 
 - Project key: `FLV` on `bellini.atlassian.net` (cloud ID: `edb9af39-1c29-4229-b847-5d71ce55e973`)
 
+## Email Delivery & Tracking Architecture
+
+**Mailgun integration**: Mailgun is used only as a delivery pipe. No contacts or lists are synced to Mailgun. The only Mailgun API calls are `POST /messages` at send time and incoming webhooks for event tracking.
+
+**Campaign sending**: Contacts and lists live entirely in the local database. When a campaign is sent, a queued job chunks the target list into batches of max 1,000 recipients (Mailgun's per-request limit) and sends each batch via the Mailgun Messages API with `recipient-variables` for personalization.
+
+**Event tracking**: `campaign_sends` table stores one row per contact per campaign with separate timestamp columns for each event stage: `sent_at`, `delivered_at`, `opened_at`, `clicked_at`, `bounced_at`, `complained_at`, `unsubscribed_at`. Mailgun webhooks update the corresponding column — nothing is overwritten, all events are preserved. This allows accurate cumulative stats (e.g. a clicked email is also counted as delivered and opened).
+
+**Contact stats**: Aggregated from `campaign_sends` using `COUNT(opened_at)`, `COUNT(clicked_at)`, etc. Stats feed the UI, AI insights, and automatic list segmentation based on contact engagement patterns.
+
 ---
 
 <laravel-boost-guidelines>
