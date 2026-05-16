@@ -19,10 +19,11 @@ runs:
         coverage: ${{ inputs.coverage }}
 
     - uses: actions/cache@v4
+      id: composer-cache
       with:
         path: vendor
-        key: composer-${{ hashFiles('composer.lock') }}
-        restore-keys: composer-
+        key: composer-v2-${{ hashFiles('composer.lock') }}
+        restore-keys: composer-v2-
 
     - name: install dependencies
       shell: bash
@@ -30,3 +31,10 @@ runs:
         composer install --no-interaction --prefer-dist --no-plugins --no-scripts
         composer dump-autoload --no-scripts
         composer install --no-interaction --prefer-dist
+
+    - name: ensure duckdb native library
+      shell: bash
+      run: |
+        if [ ! -f vendor/satur.io/duckdb/lib/duckdb-ffi.h ]; then
+          composer reinstall satur.io/duckdb --no-interaction
+        fi
